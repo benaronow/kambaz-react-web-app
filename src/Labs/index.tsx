@@ -9,6 +9,7 @@ export const Labs = () => {
     <div id="wd-labs">
       <h1>Labs</h1>
       <h3>Name: Ben Aronow</h3>
+      <h3>Section: 2</h3>
       <TOC />
       <Routes>
         <Route path="/" element={<Navigate to="Lab1" />} />
