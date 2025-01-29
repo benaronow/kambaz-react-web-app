@@ -6,7 +6,6 @@ import { LessonControlButtons } from "./LessonControlButtons";
 export const Modules = () => {
   return (
     <div>
-      {/* Implement Collapse All button, View Progress button, etc. */}
       <ModulesControls />
       <br />
       <br />
@@ -17,23 +16,33 @@ export const Modules = () => {
           <div className="wd-title p-3 ps-2 bg-secondary">
             <BsGripVertical className="me-2 fs-3" />
             Week 1
-            <LessonControlButtons />
+            <LessonControlButtons withPlus />
           </div>
-          <ListGroup className="wd-lessons rounded-0">
+          <ListGroup className="wd-lessons border-start border-success border-5 rounded-0">
             <ListGroup.Item className="wd-lesson p-3 ps-1">
               <BsGripVertical className="me-2 fs-3" />
               LEARNING OBJECTIVES
-              <LessonControlButtons />
+              <LessonControlButtons withPlus={false} />
             </ListGroup.Item>
             <ListGroup.Item className="wd-lesson p-3 ps-1">
               <BsGripVertical className="me-2 fs-3" />
               Introduction to the course
-              <LessonControlButtons />
+              <LessonControlButtons withPlus={false} />
             </ListGroup.Item>
             <ListGroup.Item className="wd-lesson p-3 ps-1">
               <BsGripVertical className="me-2 fs-3" />
               Learn what is Web Development
-              <LessonControlButtons />
+              <LessonControlButtons withPlus={false} />
+            </ListGroup.Item>
+            <ListGroup.Item className="wd-lesson p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              LESSON 1
+              <LessonControlButtons withPlus={false} />
+            </ListGroup.Item>
+            <ListGroup.Item className="wd-lesson p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              LESSON 2
+              <LessonControlButtons withPlus={false} />
             </ListGroup.Item>
           </ListGroup>
         </ListGroup.Item>
@@ -41,18 +50,23 @@ export const Modules = () => {
           <div className="wd-title p-3 ps-2 bg-secondary">
             <BsGripVertical className="me-2 fs-3" />
             Week 2
-            <LessonControlButtons />
+            <LessonControlButtons withPlus />
           </div>
-          <ListGroup className="wd-lessons rounded-0">
+          <ListGroup className="wd-lessons border-start border-success border-5 rounded-0">
+            <ListGroup.Item className="wd-lesson p-3 ps-1">
+              <BsGripVertical className="me-2 fs-3" />
+              LEARNING OBJECTIVES
+              <LessonControlButtons withPlus={false} />
+            </ListGroup.Item>
             <ListGroup.Item className="wd-lesson p-3 ps-1">
               <BsGripVertical className="me-2 fs-3" />
               LESSON 1
-              <LessonControlButtons />
+              <LessonControlButtons withPlus={false} />
             </ListGroup.Item>
             <ListGroup.Item className="wd-lesson p-3 ps-1">
               <BsGripVertical className="me-2 fs-3" />
               LESSON 2
-              <LessonControlButtons />
+              <LessonControlButtons withPlus={false} />
             </ListGroup.Item>
           </ListGroup>
         </ListGroup.Item>

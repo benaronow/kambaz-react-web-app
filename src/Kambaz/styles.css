@@ -11,6 +11,11 @@ body * {
   color: black;
   background-color: white;
   border-left: 3px solid black !important;
+  z-index: 1;
+}
+
+.wd-nav {
+  width: 115px;
 }
 
 .wd-assignments-action-bar {
