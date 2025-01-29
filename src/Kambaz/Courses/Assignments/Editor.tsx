@@ -1,150 +1,226 @@
+import {
+  Col,
+  Form,
+  FormCheck,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  FormSelect,
+  Row,
+} from "react-bootstrap";
+import { useNavigate } from "react-router";
+
 export const AssignmentEditor = () => {
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate("/Kambaz/Courses/1234/Assignments");
+  };
+
   return (
-    <div id="wd-assignments-editor">
-      <label htmlFor="wd-name">Assignment Name</label>
-      <input id="wd-name" value="A1 - ENV + HTML" />
-      <br />
-      <br />
-      <textarea id="wd-description" cols={40} rows={10}>
-        The assignment is available online. Submit a link to the landing page of
-        your Web application running on Netlify. The landing page should include
-        the following: Your full name and section, links to each of the lab
-        assigments, link to the Kanbas application, links to all relevant source
-        code repositories. The Kanbas should include a link to navigate back to
-        the landing page.
-      </textarea>
-      <table>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-points">Points</label>
-          </td>
-          <td>
-            <input id="wd-points" value={100} />
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-group">Assignment Group</label>
-          </td>
-          <td>
-            <select id="wd-group">
+    <div id="wd-assignments-editor" className="ps-2">
+      <Form>
+        <FormGroup className="mb-3">
+          <FormLabel htmlFor="wd-name">Assignment Name</FormLabel>
+          <FormControl id="wd-name" defaultValue="A1" />
+        </FormGroup>
+        <FormControl
+          id="wd-description"
+          as="textarea"
+          rows={12}
+          className="mb-3"
+        >
+          {
+            "The assignment is available online.\n\nSubmit a link to the landing page of your Web application running on Netlify.\n\nThe landing page should include the following:\n\n- Your full name and section\n- Links to each of the lab assigments\n- Link to the Kanbas application\n- Links to all relevant source code repositories.\n\nThe Kanbas should include a link to navigate back to the landing page."
+          }
+        </FormControl>
+        <FormGroup as={Row} className="mb-3">
+          <FormLabel
+            column
+            sm={4}
+            htmlFor="wd-points"
+            className="d-flex flex-row-reverse"
+          >
+            Points
+          </FormLabel>
+          <Col sm={8}>
+            <FormControl id="wd-points" type="number" defaultValue={100} />
+          </Col>
+        </FormGroup>
+        <FormGroup as={Row} className="mb-3">
+          <FormLabel
+            column
+            sm={4}
+            htmlFor="wd-group"
+            className="d-flex flex-row-reverse"
+          >
+            Assignment Group
+          </FormLabel>
+          <Col sm={8}>
+            <FormSelect id="wd-group">
               <option selected value="ASSIGNMENTS">
                 ASSIGNMENTS
               </option>
               <option value="QUIZZES">QUIZZES</option>
               <option value="EXAMS">EXAMS</option>
               <option value="PROJECT">PROJECT</option>
-            </select>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-display-grade-as">Display Grade as</label>
-          </td>
-          <td>
-            <select id="wd-display-grade-as">
-              <option value="PERCENTAGE">Percentage</option>
+            </FormSelect>
+          </Col>
+        </FormGroup>
+        <FormGroup as={Row} className="mb-3">
+          <FormLabel
+            column
+            sm={4}
+            htmlFor="wd-display-grade-as"
+            className="d-flex flex-row-reverse"
+          >
+            Display Grade as
+          </FormLabel>
+          <Col sm={8}>
+            <FormSelect id="wd-display-grade-as">
+              <option selected value="PERCENTAGE">
+                Percentage
+              </option>
               <option value="FRACTION">Fraction</option>
-            </select>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-submission-type">Submission Type</label>
-          </td>
-          <td>
-            <select id="wd-submission-type">
-              <option value="ONLINE">Online</option>
-              <option value="IN_PERSON">In Person</option>
-            </select>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td />
-          <td>
-            <span>Online Entry Options</span>
-            <br />
-            <input type="checkbox" name="check-entry" id="wd-text-entry" />
-            <label htmlFor="wd-text-entry">Text Entry</label>
-            <br />
-            <input type="checkbox" name="check-entry" id="wd-website-url" />
-            <label htmlFor="wd-website-url">Website URL</label>
-            <br />
-            <input
-              type="checkbox"
-              name="check-entry"
-              id="wd-media-recordings"
-            />
-            <label htmlFor="wd-media-recordings">Media Recordings</label>
-            <br />
-            <input
-              type="checkbox"
-              name="check-entry"
-              id="wd-student-annotation"
-            />
-            <label htmlFor="wd-student-annotation">Student Annotation</label>
-            <br />
-            <input type="checkbox" name="check-entry" id="wd-file-upload" />
-            <label htmlFor="wd-file-upload">File Upload</label>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-assign-to">Assign</label>
-          </td>
-          <td>
-            <label htmlFor="wd-assign-to">Assign to</label>
-            <br />
-            <input id="wd-assign-to" defaultValue={"Everyone"}></input>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td />
-          <td>
-            <label htmlFor="wd-due-date">Due</label>
-            <br />
-            <input
-              type="date"
-              defaultValue="2024-05-13"
-              id="wd-due-date"
-            ></input>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td />
-          <td>
-            <label htmlFor="wd-available-from">Available from</label>
-            <br />
-            <input
-              type="date"
-              defaultValue="2024-05-06"
-              id="wd-available-from"
-            ></input>
-          </td>
-          <td>
-            <label htmlFor="wd-available-until">Until</label>
-            <br />
-            <input
-              type="date"
-              defaultValue="2024-05-20"
-              id="wd-available-until"
-            ></input>
-          </td>
-        </tr>
-      </table>
-      <hr />
-      <div style={{ display: "flex", justifyContent: "right" }}>
-        <button>Cancel</button>
-        <button type="submit">Save</button>
-      </div>
+            </FormSelect>
+          </Col>
+        </FormGroup>
+        <FormGroup as={Row} className="mb-3">
+          <FormLabel
+            column
+            sm={4}
+            htmlFor="wd-submission-type"
+            className="d-flex flex-row-reverse"
+          >
+            Submission Type
+          </FormLabel>
+          <Col sm={8}>
+            <div className="border border-1 rounded p-3">
+              <FormSelect id="wd-submission-type" className="mb-3">
+                <option selected value="ONLINE">
+                  Online
+                </option>
+                <option value="IN_PERSON">In Person</option>
+              </FormSelect>
+              <div></div>
+              <span>
+                <b>Online Entry Options</b>
+              </span>
+              <FormCheck
+                className="my-3"
+                name="check-entry"
+                type="checkbox"
+                id="wd-text-entry"
+                label="Text Entry"
+              />
+              <FormCheck
+                className="mb-3"
+                name="check-entry"
+                type="checkbox"
+                defaultChecked
+                id="wd-website-url"
+                label="Website URL"
+              />
+              <FormCheck
+                className="mb-3"
+                name="check-entry"
+                type="checkbox"
+                id="wd-media-recordings"
+                label="Media Recordings"
+              />
+              <FormCheck
+                className="mb-3"
+                name="check-entry"
+                type="checkbox"
+                id="wd-student-annotation"
+                label="Student Annotation"
+              />
+              <FormCheck
+                name="check-entry"
+                type="checkbox"
+                id="wd-file-upload"
+                label="File Upload"
+              />
+            </div>
+          </Col>
+        </FormGroup>
+        <FormGroup as={Row} className="mb-3">
+          <FormLabel column sm={4} className="d-flex flex-row-reverse">
+            Assign
+          </FormLabel>
+          <Col sm={8}>
+            <div className="border border-1 rounded p-3">
+              <FormGroup>
+                <FormLabel htmlFor="wd-assign-to" className="mb-1">
+                  <span>
+                    <b>Assign to</b>
+                  </span>
+                </FormLabel>
+                <FormControl
+                  id="wd-assign-to"
+                  className="mb-3"
+                  defaultValue="Everyone"
+                />
+              </FormGroup>
+              <FormGroup>
+                <FormLabel htmlFor="wd-due-date" className="mb-1">
+                  <span>
+                    <b>Due</b>
+                  </span>
+                </FormLabel>
+                <FormControl
+                  id="wd-due-date"
+                  className="mb-3"
+                  type="date"
+                  defaultValue="2024-05-13"
+                />
+              </FormGroup>
+              <Row>
+                <FormGroup as={Col}>
+                  <FormLabel htmlFor="wd-available-from" className="mb-1">
+                    <span>
+                      <b>Available from</b>
+                    </span>
+                  </FormLabel>
+                  <FormControl
+                    id="wd-available-from"
+                    className="mb-3"
+                    type="date"
+                    defaultValue="2024-05-06"
+                  />
+                </FormGroup>
+                <FormGroup as={Col}>
+                  <FormLabel htmlFor="wd-available-until" className="mb-1">
+                    <span>
+                      <b>Until</b>
+                    </span>
+                  </FormLabel>
+                  <FormControl
+                    id="wd-available-until"
+                    className="mb-3"
+                    type="date"
+                  />
+                </FormGroup>
+              </Row>
+            </div>
+          </Col>
+        </FormGroup>
+        <hr />
+        <div className="d-flex flex-row-reverse">
+          <button
+            className="border border-1 rounded p-2 bg-danger text-light"
+            type="submit"
+          >
+            <span className="mx-1">Save</span>
+          </button>
+          <button
+            className="border border-1 rounded me-1"
+            onClick={handleCancel}
+          >
+            <span className="mx-1">Cancel</span>
+          </button>
+        </div>
+      </Form>
     </div>
   );
 };
