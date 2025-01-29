@@ -29,7 +29,7 @@ body * {
 
 .wd-search-container {
   display: flex;
-  width: 100%
+  width: 100%;
 }
 
 .wd-assignments-search {
@@ -79,6 +79,7 @@ body * {
   border-radius: 20px;
   padding: 5px;
   border-color: gray;
+  white-space: nowrap;
 }
 
 .wd-add-button {

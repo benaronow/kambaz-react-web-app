@@ -1,22 +1,33 @@
+import { FormControl } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const Signup = () => {
   return (
     <div id="wd-signup-screen">
-      <h3>Sign up</h3>
-      <input placeholder="username" className="wd-username" />
-      <br />
-      <input placeholder="password" type="password" className="wd-password" />
-      <br />
-      <input
+      <h1>Sign up</h1>
+      <FormControl id="wd-username" placeholder="username" className="mb-2" />
+      <FormControl
+        id="wd-password"
+        placeholder="password"
+        type="password"
+        className="mb-2"
+      />
+      <FormControl
+        id="wd-password-verify"
         placeholder="verify password"
         type="password"
-        className="wd-password-verify"
+        className="mb-2"
       />
-      <br />
-      <Link to="/Kambaz/Account/Profile"> Sign up </Link>
-      <br />
-      <Link to="/Kambaz/Account/Signin">Sign in</Link>
+      <Link
+        id="wd-signup-btn"
+        to="/Kambaz/Account/Profile"
+        className="btn btn-primary w-100 mb-2"
+      >
+        Sign up
+      </Link>
+      <Link id="wd-signin-link" to="/Kambaz/Account/Signin">
+        Sign in
+      </Link>
     </div>
   );
 };

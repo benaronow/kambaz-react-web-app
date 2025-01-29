@@ -176,7 +176,7 @@ export const AssignmentEditor = () => {
                 />
               </FormGroup>
               <Row>
-                <FormGroup as={Col}>
+                <FormGroup as={Col} sm={6}>
                   <FormLabel htmlFor="wd-available-from" className="mb-1">
                     <span>
                       <b>Available from</b>
@@ -189,7 +189,7 @@ export const AssignmentEditor = () => {
                     defaultValue="2024-05-06"
                   />
                 </FormGroup>
-                <FormGroup as={Col}>
+                <FormGroup as={Col} sm={6}>
                   <FormLabel htmlFor="wd-available-until" className="mb-1">
                     <span>
                       <b>Until</b>
