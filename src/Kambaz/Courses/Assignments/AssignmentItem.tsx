@@ -35,7 +35,7 @@ export const AssignmentItem = ({ number, start, end }: AssignmentItemProps) => {
           </span>
         </div>
         <div className="wd-lesson-control me-3">
-          <LessonControlButtons />
+          <LessonControlButtons withPlus={false} />
         </div>
       </div>
     </ListGroup.Item>
