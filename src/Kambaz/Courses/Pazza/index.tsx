@@ -13,6 +13,7 @@ const useStyles = makeStyles()({
   },
   mainContainer: {
     display: "flex",
+    height: "calc(100vh - 175px)",
   },
 });
 

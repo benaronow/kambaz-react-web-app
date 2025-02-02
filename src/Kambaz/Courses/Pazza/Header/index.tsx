@@ -7,7 +7,7 @@ const useStyles = makeStyles()({
     zIndex: "3",
     display: "flex",
     flexDirection: "column",
-    height: "100px",
+    height: "75px",
     width: "100%",
   },
 });

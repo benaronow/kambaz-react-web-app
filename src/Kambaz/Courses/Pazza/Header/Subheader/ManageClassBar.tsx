@@ -3,10 +3,11 @@ import { makeStyles } from "tss-react/mui";
 const useStyles = makeStyles()({
   container: {
     display: "flex",
-    height: "30px",
+    height: "25px",
     width: "100%",
-    background: "lightgray",
+    background: "#e9e8ea",
     color: "black",
+    borderBottom: "solid lightgray",
   },
 });
 
