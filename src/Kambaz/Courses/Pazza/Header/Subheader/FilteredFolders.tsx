@@ -8,7 +8,7 @@ const useStyles = makeStyles()({
     width: "100%",
     background: "#e9e8ea",
     color: "gray",
-    fontSize: "14px",
+    fontSize: "13px",
     fontWeight: 300,
     justifyContent: "space-between",
     alignItems: "center",

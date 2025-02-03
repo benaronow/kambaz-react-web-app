@@ -11,3 +11,13 @@ export const getDaysAgo = (date: Date) => {
   const timeDifference = today.getTime() - targetDate.getTime();
   return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 };
+
+export const dayNames = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
