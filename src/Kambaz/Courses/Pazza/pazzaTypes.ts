@@ -34,3 +34,5 @@ export interface Answer extends Authorable {
 export interface FollowUp extends Authorable {
   helpful: number;
 }
+
+export type FilterType = "Unread" | "Updated" | "Unresolved" | "Following" | '';

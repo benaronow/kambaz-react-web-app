@@ -15,7 +15,7 @@ export const QuestionAnswerPage = () => {
 
   return (
     <div className={classes.container}>
-      <span>QAP</span>
+      <span></span>
     </div>
   );
 };
