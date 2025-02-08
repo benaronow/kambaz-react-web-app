@@ -3,12 +3,7 @@ import { posts } from "../sampleData";
 import { getDaysAgo } from "../dateUtils";
 import { FilterType, Post } from "../pazzaTypes";
 import { MdArrowRight, MdNoteAdd } from "react-icons/md";
-import {
-  ChangeEvent,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { ImCheckmark } from "react-icons/im";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -375,6 +370,11 @@ const useStyles = makeStyles()({
     height: "19px",
     background: "lightgray",
   },
+  instructorEndorsedText: {
+    color: "#098943",
+    fontSize: "10px",
+    fontWeight: 600,
+  },
 });
 
 interface SidebarProps {
@@ -447,6 +447,36 @@ export const Sidebar = ({
   const handleShowActionsClick = () => {
     flipShowActions();
     setAllMouseOverPost("on");
+  };
+
+  const getPostDate = (post: Post) => {
+    if (getDaysAgo(post.date) < 2) {
+      return `${post.date.getHours() % 12 || 12}:${
+        post.date.getMinutes() < 10 ? "0" : ""
+      }${post.date.getMinutes()}${post.date.getHours() >= 12 ? " PM" : " AM"}`;
+    } else if (
+      getDaysAgo(post.date) >= 2 &&
+      getDaysAgo(post.date) < new Date().getDay() + 8
+    ) {
+      switch (post.date.getDay()) {
+        case 0:
+          return "Sunday";
+        case 1:
+          return "Monday";
+        case 2:
+          return "Tuesday";
+        case 3:
+          return "Wednesday";
+        case 4:
+          return "Thursday";
+        case 5:
+          return "Friday";
+        case 6:
+          return "Saturday";
+      }
+    } else {
+      return `${dayjs(post.date).format("M/DD/YYYY")}`;
+    }
   };
 
   const getPostPreviews = (filteredPosts: Post[]) => {
@@ -539,16 +569,7 @@ export const Sidebar = ({
                   <span className={classes.postTitle}>{fPost.title}</span>
                 </div>
                 <div className={classes.postTopLeft}>
-                  <span className={classes.postTime}>{`${dayjs(
-                    fPost.date
-                  ).format("MM/DD/YYYY")}`}</span>
-                  {/* <span className={classes.postTime}>{`${
-                    fPost.date.getHours() % 12
-                  }:${
-                    fPost.date.getMinutes() < 10 ? "0" : ""
-                  }${fPost.date.getMinutes()}${
-                    fPost.date.getHours() >= 12 ? " PM" : " AM"
-                  }`}</span> */}
+                  <span className={classes.postTime}>{getPostDate(fPost)}</span>
                 </div>
               </div>
               <div className={classes.postBottom}>
@@ -561,6 +582,11 @@ export const Sidebar = ({
                   ))}
                 </div>
               </div>
+              {fPost.instructorEndorsed && (
+                <span className={classes.instructorEndorsedText}>
+                  <li>{`An instructor thinks this is a good ${fPost.type}`}</li>
+                </span>
+              )}
             </div>
           </div>
         );
@@ -749,7 +775,8 @@ export const Sidebar = ({
               posts.filter(
                 (post) =>
                   getDaysAgo(post.date) >= new Date().getDay() + 8 + week * 7 &&
-                  getDaysAgo(post.date) <= new Date().getDay() + 14 + week * 7 &&
+                  getDaysAgo(post.date) <=
+                    new Date().getDay() + 14 + week * 7 &&
                   !post.pinned
               )
             )}
