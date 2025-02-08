@@ -29,11 +29,11 @@ export const CourseNavigation = () => {
         Modules
       </Link>
       <Link
-        to="/Kambaz/Courses/1234/Piazza"
-        id="wd-course-piazza-link"
-        className={`list-group-item border border-0 ${getColor("Piazza")}`}
+        to="/Kambaz/Courses/1234/Pazza"
+        id="wd-course-pazza-link"
+        className={`list-group-item border border-0 ${getColor("Pazza")}`}
       >
-        Piazza
+        Pazza
       </Link>
       <Link
         to="/Kambaz/Courses/1234/Zoom"
