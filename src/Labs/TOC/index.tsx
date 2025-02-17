@@ -37,7 +37,7 @@ export const TOC = () => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link as={Link} to="/Kambaz" id="wd-kambaz">
+        <Nav.Link as={Link} to="/Kambaz" id="wd-kambaz-link">
           Kambaz
         </Nav.Link>
       </Nav.Item>
