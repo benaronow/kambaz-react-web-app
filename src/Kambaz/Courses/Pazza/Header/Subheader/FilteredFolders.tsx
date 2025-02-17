@@ -12,7 +12,8 @@ const useStyles = makeStyles()({
     fontWeight: 300,
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottom: "solid lightgray",
+    borderBottom: "solid #cbcacd",
+    borderWidth: "1px",
   },
   grayFolder: {
     color: "gray",
@@ -24,9 +25,9 @@ const useStyles = makeStyles()({
     marginLeft: "10px",
   },
   vDivider: {
-    width: "2px",
-    height: "23px",
-    background: "lightgray",
+    width: "1px",
+    height: "24px",
+    background: "#adb5bd",
   },
   edge: {
     width: "0px",

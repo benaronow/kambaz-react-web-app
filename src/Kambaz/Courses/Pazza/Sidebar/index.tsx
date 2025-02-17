@@ -20,7 +20,8 @@ const useStyles = makeStyles()({
     width: "30%",
     background: "#e9e8ea",
     color: "black",
-    borderRight: "solid lightgray",
+    borderRight: "solid #cbcacd",
+    borderWidth: "1px",
     overflow: "scroll",
   },
   menu: {
@@ -33,7 +34,8 @@ const useStyles = makeStyles()({
     height: "25px",
     minHeight: "25px",
     width: "100%",
-    borderBottom: "solid lightgray",
+    borderBottom: "solid #cbcacd",
+    borderWidth: "1px",
   },
   collapseArrow: {
     color: "gray",
@@ -175,18 +177,19 @@ const useStyles = makeStyles()({
     minHeight: "25px",
     width: "100%",
     background: "white",
-    borderBottom: "solid lightgray",
+    borderBottom: "solid #cbcacd",
+    borderWidth: "1px",
   },
   showActionsFilters: {
     top: 100,
   },
   showActionsText: {
     color: "#3b74a1",
-    textDecoration: "underline",
     fontSize: "12px",
     marginLeft: "5px",
     "&:hover": {
       cursor: "pointer",
+      textDecoration: "underline",
     },
   },
   dropdown: {
@@ -195,7 +198,8 @@ const useStyles = makeStyles()({
     height: "25px",
     minHeight: "25px",
     width: "100%",
-    borderBottom: "solid lightgray",
+    borderBottom: "solid #cbcacd",
+    borderWidth: "1px",
     "&:hover": {
       cursor: "pointer",
     },
@@ -216,7 +220,8 @@ const useStyles = makeStyles()({
     display: "flex",
     width: "100%",
     background: "white",
-    borderBottom: "solid lightgray",
+    borderBottom: "solid #cbcacd",
+    borderWidth: "1px",
   },
   postLeft: {
     display: "flex",
@@ -365,10 +370,10 @@ const useStyles = makeStyles()({
     transform: "rotate(90deg)",
   },
   vDivider: {
-    minWidth: "2px",
-    width: "2px",
+    minWidth: "1px",
+    width: "1px",
     height: "19px",
-    background: "lightgray",
+    background: "#adb5bd",
   },
   instructorEndorsedText: {
     color: "#098943",
@@ -378,6 +383,8 @@ const useStyles = makeStyles()({
 });
 
 interface SidebarProps {
+  filter: string;
+  changeFilter: (filter: FilterType) => void;
   mouseOverPost: {
     [key: string]: { [key: string]: boolean };
   };
@@ -393,6 +400,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({
+  filter,
+  changeFilter,
   mouseOverPost,
   setMouseOverPostField,
   setAllMouseOverPost,
@@ -402,7 +411,6 @@ export const Sidebar = ({
 }: SidebarProps) => {
   const { classes } = useStyles();
 
-  const [filter, setFilter] = useState<FilterType>("");
   const [overMenuSettings, setOverMenuSettings] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [weeks, setWeeks] = useState<number[]>([]);
@@ -606,21 +614,27 @@ export const Sidebar = ({
           </div>
         </Tooltip>
         <div className={classes.vDivider} />
-        <span className={classes.menuText} onClick={() => setFilter("Updated")}>
+        <span
+          className={classes.menuText}
+          onClick={() => changeFilter("Updated")}
+        >
           Updated
         </span>
-        <span className={classes.menuText} onClick={() => setFilter("Unread")}>
+        <span
+          className={classes.menuText}
+          onClick={() => changeFilter("Unread")}
+        >
           Unread
         </span>
         <span
           className={classes.menuText}
-          onClick={() => setFilter("Unresolved")}
+          onClick={() => changeFilter("Unresolved")}
         >
           Unresolved
         </span>
         <span
           className={classes.menuText}
-          onClick={() => setFilter("Following")}
+          onClick={() => changeFilter("Following")}
         >
           Following
         </span>
@@ -666,7 +680,7 @@ export const Sidebar = ({
       {filter && (
         <div className={classes.filters}>
           <span>Filtering on:</span>
-          <div className={classes.filter} onClick={() => setFilter("")}>
+          <div className={classes.filter} onClick={() => changeFilter("")}>
             <span className={classes.filterName}>{filter}</span>
             <BiX />
           </div>
