@@ -8,13 +8,19 @@ import {
   FormSelect,
   Row,
 } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import * as db from "../../Database";
+import { Assignment } from "./AssignmentItem";
 
 export const AssignmentEditor = () => {
   const navigate = useNavigate();
+  const { cid, aid } = useParams();
+  const assignment: Assignment | undefined = db.assignments.find(
+    (assignment) => assignment._id === aid
+  );
 
   const handleCancel = () => {
-    navigate("/Kambaz/Courses/1234/Assignments");
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
 
   return (
@@ -22,7 +28,7 @@ export const AssignmentEditor = () => {
       <Form>
         <FormGroup className="mb-3">
           <FormLabel htmlFor="wd-name">Assignment Name</FormLabel>
-          <FormControl id="wd-name" defaultValue="A1" />
+          <FormControl id="wd-name" defaultValue={assignment?.title} />
         </FormGroup>
         <FormControl
           id="wd-description"
@@ -172,7 +178,7 @@ export const AssignmentEditor = () => {
                   id="wd-due-date"
                   className="mb-3"
                   type="date"
-                  defaultValue="2024-05-13"
+                  defaultValue={`2024-${assignment?.endMonth}-${assignment?.endDay}`}
                 />
               </FormGroup>
               <Row>
@@ -186,7 +192,7 @@ export const AssignmentEditor = () => {
                     id="wd-available-from"
                     className="mb-3"
                     type="date"
-                    defaultValue="2024-05-06"
+                    defaultValue={`2024-${assignment?.startMonth}-${assignment?.startDay}`}
                   />
                 </FormGroup>
                 <FormGroup as={Col} sm={6}>

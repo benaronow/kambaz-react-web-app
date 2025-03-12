@@ -4,13 +4,13 @@ import { AssignmentItem } from "./AssignmentItem";
 import { BiPlus, BiSolidDownArrow } from "react-icons/bi";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import * as db from "../../Database";
+import { useParams } from "react-router";
 
 export const Assignments = () => {
-  const dates = [
-    [6, 13],
-    [13, 20],
-    [20, 27],
-  ];
+  const { cid } = useParams();
+  const assignments = db.assignments;
+
   return (
     <div id="wd-assignments" className="ms-5 me-5">
       <div className="wd-assignments-action-bar mb-5">
@@ -58,14 +58,11 @@ export const Assignments = () => {
             </div>
           </div>
           <ListGroup className="wd-assignments rounded-0 border-start border-success border-5">
-            {dates.map((date, idx) => (
-              <AssignmentItem
-                key={idx}
-                number={idx + 1}
-                start={date[0]}
-                end={date[1]}
-              />
-            ))}
+            {assignments
+              .filter((assignment) => assignment.course === cid)
+              .map((assignment, idx) => (
+                <AssignmentItem key={idx} assignment={assignment} />
+              ))}
           </ListGroup>
         </ListGroup.Item>
       </ListGroup>

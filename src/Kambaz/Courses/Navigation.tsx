@@ -1,68 +1,36 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 export const CourseNavigation = () => {
   const location = useLocation();
+  const { cid } = useParams();
+  const links = [
+    "Home",
+    "Modules",
+    "Piazza",
+    "Zoom",
+    "Assignments",
+    "Quizzes",
+    "Grades",
+    "People",
+  ];
 
   const getColor = (pathname: string) => {
-    return location.pathname.includes(`Kambaz/Courses/1234/${pathname}`)
+    return location.pathname.includes(`Kambaz/Courses/${cid}/${pathname}`)
       ? "active"
       : "text-danger";
   };
 
   return (
-    <div
-      id="wd-courses-navigation"
-      className="wd list-group fs-5 rounded-0"
-    >
-      <Link
-        to="/Kambaz/Courses/1234/Home"
-        id="wd-course-home-link"
-        className={`list-group-item border border-0 ${getColor("Home")}`}
-      >
-        Home
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Modules"
-        id="wd-course-modules-link"
-        className={`list-group-item border border-0 ${getColor("Modules")}`}
-      >
-        Modules
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Pazza"
-        id="wd-course-pazza-link"
-        className={`list-group-item border border-0 ${getColor("Pazza")}`}
-      >
-        Pazza
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Zoom"
-        id="wd-course-zoom-link"
-        className={`list-group-item border border-0 ${getColor("Zoom")}`}
-      >
-        Zoom
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Assignments"
-        id="wd-course-quizzes-link"
-        className={`list-group-item border border-0 ${getColor("Assignments")}`}
-      >
-        Assignments
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/Quizzes"
-        id="wd-course-assignments-link"
-        className={`list-group-item border border-0 ${getColor("Quizzes")}`}
-      >
-        Quizzes
-      </Link>
-      <Link
-        to="/Kambaz/Courses/1234/People"
-        id="wd-course-people-link"
-        className={`list-group-item border border-0 ${getColor("People")}`}
-      >
-        People
-      </Link>
+    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
+      {links.map((link) => (
+        <Link
+          to={`/Kambaz/Courses/${cid}/${link}`}
+          id={`wd-course-${link.toLowerCase()}-link`}
+          className={`list-group-item border border-0 ${getColor(link)}`}
+        >
+          {link}
+        </Link>
+      ))}
     </div>
   );
 };
