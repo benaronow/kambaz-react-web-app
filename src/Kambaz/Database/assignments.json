@@ -1,0 +1,83 @@
+[
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "course": "RS101",
+    "startMonth": "05",
+    "startDay": "06",
+    "endMonth": "05",
+    "endDay": "13"
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "course": "RS101",
+    "startMonth": "05",
+    "startDay": "13",
+    "endMonth": "05",
+    "endDay": "20"
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "course": "RS101",
+    "startMonth": "05",
+    "startDay": "20",
+    "endMonth": "05",
+    "endDay": "27"
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "course": "RS102",
+    "startMonth": "05",
+    "startDay": "27",
+    "endMonth": "06",
+    "endDay": "03"
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "course": "RS102",
+    "startMonth": "06",
+    "startDay": "03",
+    "endMonth": "06",
+    "endDay": "10"
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "course": "RS102",
+    "startMonth": "06",
+    "startDay": "10",
+    "endMonth": "06",
+    "endDay": "17"
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "course": "RS103",
+    "startMonth": "06",
+    "startDay": "17",
+    "endMonth": "06",
+    "endDay": "24"
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "course": "RS103",
+    "startMonth": "06",
+    "startDay": "24",
+    "endMonth": "07",
+    "endDay": "01"
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "course": "RS103",
+    "startMonth": "07",
+    "startDay": "01",
+    "endMonth": "07",
+    "endDay": "08"
+  }
+]
