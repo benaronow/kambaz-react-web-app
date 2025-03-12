@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export const HelloRedux = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
