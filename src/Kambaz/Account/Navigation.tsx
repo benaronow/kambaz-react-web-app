@@ -1,7 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const AccountNavigation = () => {
   const location = useLocation();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
 
   const getColor = (pathname: string) => {
     return location.pathname.includes(`Kambaz/Account/${pathname}`)
@@ -11,27 +15,15 @@ export const AccountNavigation = () => {
 
   return (
     <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
-      <Link
-        to="/Kambaz/Account/Signin"
-        id="wd-signin-link"
-        className={`list-group-item border border-0 ${getColor("Signin")}`}
-      >
-        Signin
-      </Link>
-      <Link
-        to="/Kambaz/Account/Signup"
-        id="wd-signup-link"
-        className={`list-group-item border border-0 ${getColor("Signup")}`}
-      >
-        Signup
-      </Link>
-      <Link
-        to="/Kambaz/Account/Profile"
-        id="wd-profile-link"
-        className={`list-group-item border border-0 ${getColor("Profile")}`}
-      >
-        Profile
-      </Link>
+      {links.map((link) => (
+        <Link
+          to={`/Kambaz/Account/${link}`}
+          id={`wd-${link}-link`}
+          className={`list-group-item border border-0 ${getColor(link)}`}
+        >
+          {link}
+        </Link>
+      ))}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { RiFileEditLine } from "react-icons/ri";
 import { LessonControlButtons } from "../Modules/LessonControlButtons";
 import { useParams } from "react-router";
 import { MONTHMAP } from "./monthMap";
+import { useSelector } from "react-redux";
 
 export type Assignment = {
   _id: string;
@@ -21,17 +22,21 @@ interface AssignmentItemProps {
 
 export const AssignmentItem = ({ assignment }: AssignmentItemProps) => {
   const { cid } = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   return (
     <ListGroup.Item className="wd-assignment-list-item-container p-0 ps-0">
       <div className="wd-assignment-list-item">
         <BsGripVertical className="me-2 fs-2" />
-        <a
-          href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
-          className="wd-assignment-link"
-        >
-          <RiFileEditLine className="wd-edit-icon fs-2" />
-        </a>
+        {currentUser.role === "FACULTY" && (
+          <a
+            href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+            className="wd-assignment-link"
+          >
+            <RiFileEditLine className="wd-edit-icon fs-2" />
+          </a>
+        )}
         <div className="wd-flex-col-container mt-3 mb-3">
           <span>
             <b>{assignment.title}</b>
@@ -55,7 +60,12 @@ export const AssignmentItem = ({ assignment }: AssignmentItemProps) => {
           </span>
         </div>
         <div className="wd-lesson-control me-3">
-          <LessonControlButtons withPlus={false} />
+          <LessonControlButtons
+            isModule={false}
+            moduleId=""
+            deleteModule={() => {}}
+            editModule={() => {}}
+          />
         </div>
       </div>
     </ListGroup.Item>

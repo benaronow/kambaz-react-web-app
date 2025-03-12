@@ -6,10 +6,13 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import * as db from "../../Database";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 export const Assignments = () => {
   const { cid } = useParams();
   const assignments = db.assignments;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   return (
     <div id="wd-assignments" className="ms-5 me-5">
@@ -24,20 +27,24 @@ export const Assignments = () => {
             />
           </div>
         </div>
-        <button
-          id="wd-add-assignment-group"
-          className="wd-assignments-action me-1 px-3 rounded"
-        >
-          <BiPlus className="fs-4" />
-          <span className="me-1">Group</span>
-        </button>
-        <button
-          id="wd-add-assignment"
-          className="wd-assignments-action px-3 rounded bg-danger text-light"
-        >
-          <BiPlus className="fs-4" />
-          <span className="me-1">Assignment</span>
-        </button>
+        {currentUser.role === "FACULTY" && (
+          <>
+            <button
+              id="wd-add-assignment-group"
+              className="wd-assignments-action me-1 px-3 rounded"
+            >
+              <BiPlus className="fs-4" />
+              <span className="me-1">Group</span>
+            </button>
+            <button
+              id="wd-add-assignment"
+              className="wd-assignments-action px-3 rounded bg-danger text-light"
+            >
+              <BiPlus className="fs-4" />
+              <span className="me-1">Assignment</span>
+            </button>
+          </>
+        )}
       </div>
       <ListGroup className="rounded-0" id="wd-assignment-list">
         <ListGroup.Item className="p-0 mb-5 fs-5">
