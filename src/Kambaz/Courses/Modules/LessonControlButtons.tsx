@@ -6,24 +6,32 @@ import { FaPencil } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
 interface LessonControlButtonsProps {
-  isModule: boolean;
-  moduleId: string;
   deleteModule: (moduleId: string) => void;
   editModule: (moduleId: string) => void;
+  isModule?: boolean;
+  moduleId?: string;
+  isAssignment?: boolean;
+  assignmentId?: string;
+  setDeleteAssignmentId: (id: string) => void;
+  setDeleteModalOpen: (open: boolean) => void;
 }
 
 export const LessonControlButtons = ({
-  isModule,
-  moduleId,
   deleteModule,
   editModule,
+  isModule = false,
+  moduleId,
+  isAssignment = false,
+  assignmentId,
+  setDeleteAssignmentId,
+  setDeleteModalOpen,
 }: LessonControlButtonsProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   return (
     <div className="float-end">
-      {isModule && currentUser.role === "FACULTY" && (
+      {isModule && moduleId && currentUser.role === "FACULTY" && (
         <>
           <FaPencil
             onClick={() => editModule(moduleId)}
@@ -34,6 +42,15 @@ export const LessonControlButtons = ({
             onClick={() => deleteModule(moduleId)}
           />
         </>
+      )}
+      {isAssignment && assignmentId && (
+        <FaTrash
+          className="text-danger me-2 mb-1"
+          onClick={() => {
+            setDeleteAssignmentId(assignmentId);
+            setDeleteModalOpen(true);
+          }}
+        />
       )}
       <GreenCheckmark />
       {isModule && <BiPlus className="fs-4" />}

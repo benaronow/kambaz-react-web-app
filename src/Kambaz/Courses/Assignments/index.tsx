@@ -1,17 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ListGroup } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
-import { AssignmentItem } from "./AssignmentItem";
+import { Assignment, AssignmentItem } from "./AssignmentItem";
 import { BiPlus, BiSolidDownArrow } from "react-icons/bi";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import * as db from "../../Database";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useSelector } from "react-redux";
 
-export const Assignments = () => {
+interface AssignmentsProps {
+  setDeleteAssignmentId: (id: string) => void;
+  setDeleteModalOpen: (open: boolean) => void;
+}
+
+export const Assignments = ({
+  setDeleteAssignmentId,
+  setDeleteModalOpen,
+}: AssignmentsProps) => {
   const { cid } = useParams();
-  const assignments = db.assignments;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   return (
@@ -36,13 +43,14 @@ export const Assignments = () => {
               <BiPlus className="fs-4" />
               <span className="me-1">Group</span>
             </button>
-            <button
+            <Link
               id="wd-add-assignment"
-              className="wd-assignments-action px-3 rounded bg-danger text-light"
+              className="wd-assignments-action px-3 rounded bg-danger text-light text-decoration-none"
+              to={`/Kambaz/Courses/${cid}/Assignments/new`}
             >
               <BiPlus className="fs-4" />
               <span className="me-1">Assignment</span>
-            </button>
+            </Link>
           </>
         )}
       </div>
@@ -66,9 +74,14 @@ export const Assignments = () => {
           </div>
           <ListGroup className="wd-assignments rounded-0 border-start border-success border-5">
             {assignments
-              .filter((assignment) => assignment.course === cid)
-              .map((assignment, idx) => (
-                <AssignmentItem key={idx} assignment={assignment} />
+              .filter((assignment: Assignment) => assignment.course === cid)
+              .map((assignment: Assignment, idx: number) => (
+                <AssignmentItem
+                  key={idx}
+                  assignment={assignment}
+                  setDeleteAssignmentId={setDeleteAssignmentId}
+                  setDeleteModalOpen={setDeleteModalOpen}
+                />
               ))}
           </ListGroup>
         </ListGroup.Item>

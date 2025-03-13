@@ -9,18 +9,29 @@ import { useSelector } from "react-redux";
 export type Assignment = {
   _id: string;
   title: string;
+  description: string;
+  points: string;
   course: string;
+  group: string;
   startMonth: string;
   startDay: string;
   endMonth: string;
   endDay: string;
+  untilMonth: string;
+  untilDay: string;
 };
 
 interface AssignmentItemProps {
   assignment: Assignment;
+  setDeleteAssignmentId: (id: string) => void;
+  setDeleteModalOpen: (open: boolean) => void;
 }
 
-export const AssignmentItem = ({ assignment }: AssignmentItemProps) => {
+export const AssignmentItem = ({
+  assignment,
+  setDeleteAssignmentId,
+  setDeleteModalOpen,
+}: AssignmentItemProps) => {
   const { cid } = useParams();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -61,10 +72,12 @@ export const AssignmentItem = ({ assignment }: AssignmentItemProps) => {
         </div>
         <div className="wd-lesson-control me-3">
           <LessonControlButtons
-            isModule={false}
-            moduleId=""
+            isAssignment
+            assignmentId={assignment._id}
             deleteModule={() => {}}
             editModule={() => {}}
+            setDeleteAssignmentId={setDeleteAssignmentId}
+            setDeleteModalOpen={setDeleteModalOpen}
           />
         </div>
       </div>
