@@ -59,6 +59,8 @@ export const Modules = () => {
                     dispatch(deleteModule(moduleId));
                   }}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
+                  setDeleteAssignmentId={() => {}}
+                  setDeleteModalOpen={() => {}}
                 />
               </div>
               {module.lessons && (
@@ -75,6 +77,8 @@ export const Modules = () => {
                         editModule={(moduleId) =>
                           dispatch(editModule(moduleId))
                         }
+                        setDeleteAssignmentId={() => {}}
+                        setDeleteModalOpen={() => {}}
                       />
                     </li>
                   ))}
