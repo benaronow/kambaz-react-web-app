@@ -120,7 +120,7 @@ export const Dashboard = ({ courses }: { courses: any[] }) => {
                       {course.description}{" "}
                     </Card.Text>
                     <Button variant="primary"> Go </Button>
-                    {currentUser.role === "FACULTY" && (
+                    {currentUser.role === "FACULTY" && !displayAllCourses && (
                       <>
                         <button
                           onClick={(event) => {
@@ -144,7 +144,7 @@ export const Dashboard = ({ courses }: { courses: any[] }) => {
                         </button>
                       </>
                     )}
-                    {currentUser.role === "STUDENT" && displayAllCourses && (
+                    {displayAllCourses && (
                       <>
                         <button
                           onClick={(event) => {
