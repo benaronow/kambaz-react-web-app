@@ -6,13 +6,18 @@ import { Assignments } from "./Assignments";
 import { AssignmentEditor } from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa6";
 import { PeopleTable } from "./People/Table";
-import { courses } from "../Database";
+import { useState } from "react";
+import { DeleteModal } from "./DeleteModal";
 import { Pazza } from "./Pazza";
 
-export const Courses = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Courses = ({ courses }: { courses: any[] }) => {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteAssignmentId, setDeleteAssignmentId] = useState("");
 
   return (
     <div id="wd-courses">
@@ -31,12 +36,27 @@ export const Courses = () => {
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
             <Route path="Pazza/*" element={<Pazza />} />
-            <Route path="Assignments" element={<Assignments />} />
+            <Route
+              path="Assignments"
+              element={
+                <Assignments
+                  setDeleteAssignmentId={setDeleteAssignmentId}
+                  setDeleteModalOpen={setDeleteModalOpen}
+                />
+              }
+            />
+            <Route path="Assignments/new" element={<AssignmentEditor />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="People" element={<PeopleTable />} />
           </Routes>
         </div>
       </div>
+      {deleteModalOpen && (
+        <DeleteModal
+          assignmentId={deleteAssignmentId}
+          setDeleteModalOpen={setDeleteModalOpen}
+        />
+      )}
     </div>
   );
 };

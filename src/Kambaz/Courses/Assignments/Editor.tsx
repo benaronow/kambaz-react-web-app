@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Col,
   Form,
@@ -8,37 +9,116 @@ import {
   FormSelect,
   Row,
 } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router";
-import * as db from "../../Database";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Assignment } from "./AssignmentItem";
+import { useDispatch, useSelector } from "react-redux";
+import { ChangeEvent, useState } from "react";
+import { addAssignment, updateAssigment } from "./reducer";
 
 export const AssignmentEditor = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { cid, aid } = useParams();
-  const assignment: Assignment | undefined = db.assignments.find(
-    (assignment) => assignment._id === aid
+  console.log(cid);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
+  console.log("assigments:", assignments);
+  const prevAssigment: Assignment | undefined = aid
+    ? assignments?.find((assignment: Assignment) => assignment._id === aid)
+    : undefined;
+  const emptyAssigment: Assignment = {
+    _id: "",
+    title: "",
+    description: "",
+    points: "100",
+    course: cid || "",
+    group: "ASSIGNMENTS",
+    startMonth: "",
+    startDay: "",
+    endMonth: "",
+    endDay: "",
+    untilMonth: "",
+    untilDay: "",
+  };
+  const [assignment, setAssignment] = useState<Assignment>(
+    prevAssigment ?? emptyAssigment
   );
 
   const handleCancel = () => {
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
 
+  const handleSubmit = () => {
+    dispatch(
+      pathname.includes("new")
+        ? addAssignment(assignment)
+        : updateAssigment(assignment)
+    );
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
+
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAssignment((prev) => ({ ...prev, title: e.target.value }));
+  };
+
+  const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAssignment((prev) => ({ ...prev, description: e.target.value }));
+  };
+
+  const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAssignment((prev) => ({ ...prev, points: e.target.value }));
+  };
+
+  const handleGroupChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setAssignment((prev) => ({ ...prev, group: e.target.value }));
+  };
+
+  const handleStartChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
+    setAssignment((prev) => ({
+      ...prev,
+      startMonth: e.target.value.split("-")[1],
+      startDay: e.target.value.split("-")[2],
+    }));
+  };
+
+  const handleEndChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
+    setAssignment((prev) => ({
+      ...prev,
+      endMonth: e.target.value.split("-")[1],
+      endDay: e.target.value.split("-")[2],
+    }));
+  };
+
+  const handleUntilChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e);
+    setAssignment((prev) => ({
+      ...prev,
+      untilMonth: e.target.value.split("-")[1],
+      untilDay: e.target.value.split("-")[2],
+    }));
+  };
+
   return (
     <div id="wd-assignments-editor" className="ps-2">
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <FormGroup className="mb-3">
           <FormLabel htmlFor="wd-name">Assignment Name</FormLabel>
-          <FormControl id="wd-name" defaultValue={assignment?.title} />
+          <FormControl
+            id="wd-name"
+            defaultValue={assignment?.title ?? ""}
+            onChange={handleTitleChange}
+          />
         </FormGroup>
         <FormControl
           id="wd-description"
           as="textarea"
           rows={12}
           className="mb-3"
+          onChange={handleDescriptionChange}
         >
-          {
-            "The assignment is available online.\n\nSubmit a link to the landing page of your Web application running on Netlify.\n\nThe landing page should include the following:\n\n- Your full name and section\n- Links to each of the lab assigments\n- Link to the Kanbas application\n- Links to all relevant source code repositories.\n\nThe Kanbas should include a link to navigate back to the landing page."
-          }
+          {assignment?.description ?? ""}
         </FormControl>
         <FormGroup as={Row} className="mb-3">
           <FormLabel
@@ -46,11 +126,17 @@ export const AssignmentEditor = () => {
             sm={4}
             htmlFor="wd-points"
             className="d-flex flex-row-reverse"
+            onChange={handlePointsChange}
           >
             Points
           </FormLabel>
           <Col sm={8}>
-            <FormControl id="wd-points" type="number" defaultValue={100} />
+            <FormControl
+              id="wd-points"
+              type="number"
+              defaultValue={parseInt(assignment.points) ?? 100}
+              onChange={handlePointsChange}
+            />
           </Col>
         </FormGroup>
         <FormGroup as={Row} className="mb-3">
@@ -63,13 +149,22 @@ export const AssignmentEditor = () => {
             Assignment Group
           </FormLabel>
           <Col sm={8}>
-            <FormSelect id="wd-group">
-              <option selected value="ASSIGNMENTS">
+            <FormSelect id="wd-group" onChange={handleGroupChange}>
+              <option
+                selected={assignment.group === "ASSIGNMENTS"}
+                value="ASSIGNMENTS"
+              >
                 ASSIGNMENTS
               </option>
-              <option value="QUIZZES">QUIZZES</option>
-              <option value="EXAMS">EXAMS</option>
-              <option value="PROJECT">PROJECT</option>
+              <option selected={assignment.group === "QUIZZES"} value="QUIZZES">
+                QUIZZES
+              </option>
+              <option selected={assignment.group === "EXAMS"} value="EXAMS">
+                EXAMS
+              </option>
+              <option selected={assignment.group === "PROJECT"} value="PROJECT">
+                PROJECT
+              </option>
             </FormSelect>
           </Col>
         </FormGroup>
@@ -178,7 +273,12 @@ export const AssignmentEditor = () => {
                   id="wd-due-date"
                   className="mb-3"
                   type="date"
-                  defaultValue={`2024-${assignment?.endMonth}-${assignment?.endDay}`}
+                  defaultValue={
+                    assignment.endMonth &&
+                    assignment.endDay &&
+                    `2025-${assignment?.endMonth}-${assignment?.endDay}`
+                  }
+                  onChange={handleEndChange}
                 />
               </FormGroup>
               <Row>
@@ -192,7 +292,12 @@ export const AssignmentEditor = () => {
                     id="wd-available-from"
                     className="mb-3"
                     type="date"
-                    defaultValue={`2024-${assignment?.startMonth}-${assignment?.startDay}`}
+                    defaultValue={
+                      assignment.startMonth &&
+                      assignment.startDay &&
+                      `2025-${assignment?.startMonth}-${assignment?.startDay}`
+                    }
+                    onChange={handleStartChange}
                   />
                 </FormGroup>
                 <FormGroup as={Col} sm={6}>
@@ -205,6 +310,12 @@ export const AssignmentEditor = () => {
                     id="wd-available-until"
                     className="mb-3"
                     type="date"
+                    defaultValue={
+                      assignment.untilMonth &&
+                      assignment.untilDay &&
+                      `2025-${assignment?.untilMonth}-${assignment?.untilDay}`
+                    }
+                    onChange={handleUntilChange}
                   />
                 </FormGroup>
               </Row>
