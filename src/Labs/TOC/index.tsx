@@ -37,6 +37,16 @@ export const TOC = () => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
+        <Nav.Link
+          as={Link}
+          to="/Labs/Lab4"
+          id="wd-a4"
+          active={pathname.includes("Lab4")}
+        >
+          Lab 4
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
         <Nav.Link as={Link} to="/Kambaz" id="wd-kambaz-link">
           Kambaz
         </Nav.Link>
