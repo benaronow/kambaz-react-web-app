@@ -465,7 +465,7 @@ export const Sidebar = ({
     });
     setWeeks(acc);
     if (post) viewPost(post);
-  }, []);
+  }, [post]);
 
   const flipDropdown = (dropdown: number) => {
     setDropdowns((prev) => {
