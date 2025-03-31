@@ -4,8 +4,8 @@ import { InstructorAnswerBox } from "./InstructorAnswerBox";
 import { StudentAnswerBox } from "./StudentAnswerBox";
 import { FollowUpBox } from "./FollowUpBox";
 import { useContext } from "react";
-import { PazzaContext } from "../../providers/PazzaProvider";
-import { LoginContext } from "../../providers/LoginProvider";
+import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
+import { LoginContext } from "../../providers/LoginProvider/LoginContext";
 
 const useStyles = makeStyles()({
   container: {

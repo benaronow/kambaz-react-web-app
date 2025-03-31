@@ -5,7 +5,7 @@ export const instructor1: User = {
   _id: "123",
   type: "instructor",
   name: "Instructor 1",
-  profilePic: "/public/profiles/redpanda.png",
+  profilePic: "/profiles/redpanda.png",
   viewedPosts: [],
 };
 
@@ -13,7 +13,7 @@ export const instructor2: User = {
   _id: "234",
   type: "instructor",
   name: "Instructor 2",
-  profilePic: "/public/profiles/chimp.png",
+  profilePic: "/profiles/chimp.png",
   viewedPosts: [],
 };
 
@@ -21,7 +21,7 @@ export const instructor3: User = {
   _id: "345",
   type: "instructor",
   name: "Instructor 3",
-  profilePic: "/public/profiles/crocodile.png",
+  profilePic: "/profiles/crocodile.png",
   viewedPosts: [],
 };
 
@@ -29,7 +29,7 @@ export const student1: User = {
   _id: "456",
   type: "student",
   name: "Student 1",
-  profilePic: "/public/profiles/elephant.png",
+  profilePic: "/profiles/elephant.png",
   viewedPosts: [],
 };
 
@@ -37,7 +37,7 @@ export const student2: User = {
   _id: "567",
   type: "student",
   name: "Student 2",
-  profilePic: "/public/profiles/goat.png",
+  profilePic: "/profiles/goat.png",
   viewedPosts: [],
 };
 
@@ -45,7 +45,7 @@ export const student3: User = {
   _id: "678",
   type: "student",
   name: "Student 3",
-  profilePic: "/public/profiles/koala.png",
+  profilePic: "/profiles/koala.png",
   viewedPosts: [],
 };
 
@@ -53,7 +53,7 @@ export const student4: User = {
   _id: "789",
   type: "student",
   name: "Student 4",
-  profilePic: "/public/profiles/panda.png",
+  profilePic: "/profiles/panda.png",
   viewedPosts: [],
 };
 
@@ -61,7 +61,7 @@ export const student5: User = {
   _id: "890",
   type: "student",
   name: "Student 5",
-  profilePic: "/public/profiles/pig.png",
+  profilePic: "/profiles/pig.png",
   viewedPosts: [],
 };
 
@@ -69,7 +69,7 @@ export const student6: User = {
   _id: "901",
   type: "student",
   name: "Student 6",
-  profilePic: "/public/profiles/tiger.png",
+  profilePic: "/profiles/tiger.png",
   viewedPosts: [],
 };
 
@@ -77,7 +77,7 @@ export const student7: User = {
   _id: "012",
   type: "student",
   name: "Student 7",
-  profilePic: "/public/profiles/toucan.png",
+  profilePic: "/profiles/toucan.png",
   viewedPosts: [],
 };
 
@@ -364,4 +364,4 @@ export const questions = [
   question6,
   question7,
 ];
-export const posts = [...notes, ...questions];
+export const allPosts = [...notes, ...questions];

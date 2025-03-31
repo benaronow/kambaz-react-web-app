@@ -1,5 +1,4 @@
 import { makeStyles } from "tss-react/mui";
-import { posts } from "../sampleData";
 import { getDaysAgo } from "../dateUtils";
 import { Post } from "../pazzaTypes";
 import { MdArrowRight, MdNoteAdd } from "react-icons/md";
@@ -11,8 +10,8 @@ import { BiX } from "react-icons/bi";
 import { RiArrowLeftSFill } from "react-icons/ri";
 import { IoIosSettings, IoMdArrowDropdown } from "react-icons/io";
 import { Tooltip } from "@mui/material";
-import { PazzaContext } from "../providers/PazzaProvider";
-import { LoginContext } from "../providers/LoginProvider";
+import { PazzaContext } from "../providers/PazzaProvider/PazzaContext";
+import { LoginContext } from "../providers/LoginProvider/LoginContext";
 
 const useStyles = makeStyles()({
   container: {
@@ -433,7 +432,8 @@ export const Sidebar = ({
 }: SidebarProps) => {
   const { classes } = useStyles();
   const { currentUser, viewPost } = useContext(LoginContext);
-  const { filter, changeFilter, post, changePost } = useContext(PazzaContext);
+  const { filter, changeFilter, post, changePost, filteredPosts } =
+    useContext(PazzaContext);
 
   const [overMenuSettings, setOverMenuSettings] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -448,7 +448,7 @@ export const Sidebar = ({
 
   useEffect(() => {
     const acc: number[] = [];
-    [...posts].reverse().forEach((post) => {
+    [...filteredPosts].reverse().forEach((post) => {
       setMouseOverPostField(post.title, "init", "on");
       const weeksAgo = Math.floor(
         (getDaysAgo(post.date) - (new Date().getDay() + 8)) / 7
@@ -732,67 +732,96 @@ export const Sidebar = ({
           {showActions ? "Hide Actions" : "Show Actions"}
         </span>
       </div>
-      <div className={classes.dropdown} onClick={() => flipDropdown(0)}>
-        <MdArrowRight
-          className={`${classes.dropdownArrow} ${
-            dropdowns["0"] ? classes.openDropdownArrow : ""
-          }`}
-        />
-        <span className={classes.dropdownTitle}>PINNED</span>
-      </div>
-      {dropdowns["0"] && getPostPreviews(posts.filter((post) => post.pinned))}
-      <div className={classes.dropdown} onClick={() => flipDropdown(1)}>
-        <MdArrowRight
-          className={`${classes.dropdownArrow} ${
-            dropdowns["1"] ? classes.openDropdownArrow : ""
-          }`}
-        />
-        <span className={classes.dropdownTitle}>TODAY</span>
-      </div>
+      {filteredPosts.filter((post) => post.pinned).length > 0 && (
+        <div className={classes.dropdown} onClick={() => flipDropdown(0)}>
+          <MdArrowRight
+            className={`${classes.dropdownArrow} ${
+              dropdowns["0"] ? classes.openDropdownArrow : ""
+            }`}
+          />
+          <span className={classes.dropdownTitle}>PINNED</span>
+        </div>
+      )}
+      {dropdowns["0"] &&
+        getPostPreviews(filteredPosts.filter((post) => post.pinned))}
+      {filteredPosts.filter(
+        (post) => getDaysAgo(post.date) === 0 && !post.pinned
+      ).length > 0 && (
+        <div className={classes.dropdown} onClick={() => flipDropdown(1)}>
+          <MdArrowRight
+            className={`${classes.dropdownArrow} ${
+              dropdowns["1"] ? classes.openDropdownArrow : ""
+            }`}
+          />
+          <span className={classes.dropdownTitle}>TODAY</span>
+        </div>
+      )}
       {dropdowns["1"] &&
         getPostPreviews(
-          posts.filter((post) => getDaysAgo(post.date) === 0 && !post.pinned)
+          filteredPosts.filter(
+            (post) => getDaysAgo(post.date) === 0 && !post.pinned
+          )
         )}
-      <div className={classes.dropdown} onClick={() => flipDropdown(2)}>
-        <MdArrowRight
-          className={`${classes.dropdownArrow} ${
-            dropdowns["2"] ? classes.openDropdownArrow : ""
-          }`}
-        />
-        <span className={classes.dropdownTitle}>YESTERDAY</span>
-      </div>
+      {filteredPosts.filter(
+        (post) => getDaysAgo(post.date) === 1 && !post.pinned
+      ).length > 0 && (
+        <div className={classes.dropdown} onClick={() => flipDropdown(2)}>
+          <MdArrowRight
+            className={`${classes.dropdownArrow} ${
+              dropdowns["2"] ? classes.openDropdownArrow : ""
+            }`}
+          />
+          <span className={classes.dropdownTitle}>YESTERDAY</span>
+        </div>
+      )}
       {dropdowns["2"] &&
         getPostPreviews(
-          posts.filter((post) => getDaysAgo(post.date) === 1 && !post.pinned)
+          filteredPosts.filter(
+            (post) => getDaysAgo(post.date) === 1 && !post.pinned
+          )
         )}
-      <div className={classes.dropdown} onClick={() => flipDropdown(3)}>
-        <MdArrowRight
-          className={`${classes.dropdownArrow} ${
-            dropdowns["3"] ? classes.openDropdownArrow : ""
-          }`}
-        />
-        <span className={classes.dropdownTitle}>THIS WEEK</span>
-      </div>
+      {filteredPosts.filter(
+        (post) =>
+          getDaysAgo(post.date) > 1 &&
+          getDaysAgo(post.date) <= new Date().getDay() &&
+          !post.pinned
+      ).length > 0 && (
+        <div className={classes.dropdown} onClick={() => flipDropdown(3)}>
+          <MdArrowRight
+            className={`${classes.dropdownArrow} ${
+              dropdowns["3"] ? classes.openDropdownArrow : ""
+            }`}
+          />
+          <span className={classes.dropdownTitle}>THIS WEEK</span>
+        </div>
+      )}
       {dropdowns["3"] &&
         getPostPreviews(
-          posts.filter(
+          filteredPosts.filter(
             (post) =>
               getDaysAgo(post.date) > 1 &&
               getDaysAgo(post.date) <= new Date().getDay() &&
               !post.pinned
           )
         )}
-      <div className={classes.dropdown} onClick={() => flipDropdown(4)}>
-        <MdArrowRight
-          className={`${classes.dropdownArrow} ${
-            dropdowns["4"] ? classes.openDropdownArrow : ""
-          }`}
-        />
-        <span className={classes.dropdownTitle}>LAST WEEK</span>
-      </div>
+      {filteredPosts.filter(
+        (post) =>
+          getDaysAgo(post.date) > new Date().getDay() + 1 &&
+          getDaysAgo(post.date) <= new Date().getDay() + 7 &&
+          !post.pinned
+      ).length > 0 && (
+        <div className={classes.dropdown} onClick={() => flipDropdown(4)}>
+          <MdArrowRight
+            className={`${classes.dropdownArrow} ${
+              dropdowns["4"] ? classes.openDropdownArrow : ""
+            }`}
+          />
+          <span className={classes.dropdownTitle}>LAST WEEK</span>
+        </div>
+      )}
       {dropdowns["4"] &&
         getPostPreviews(
-          posts.filter(
+          filteredPosts.filter(
             (post) =>
               getDaysAgo(post.date) > new Date().getDay() + 1 &&
               getDaysAgo(post.date) <= new Date().getDay() + 7 &&
@@ -801,26 +830,33 @@ export const Sidebar = ({
         )}
       {weeks.reverse().map((week, idx) => (
         <div key={idx}>
-          <div
-            className={classes.dropdown}
-            onClick={() => flipDropdown(5 + week)}
-          >
-            <MdArrowRight
-              className={`${classes.dropdownArrow} ${
-                dropdowns[`${5 + week}`] ? classes.openDropdownArrow : ""
-              }`}
-            />
-            <span className={classes.dropdownTitle}>
-              {`${dayjs()
-                .subtract(new Date().getDay() + 14 + week * 7, "day")
-                .format("M/DD")} - ${dayjs()
-                .subtract(new Date().getDay() + 8 + week * 7, "day")
-                .format("M/DD")}`}
-            </span>
-          </div>
+          {filteredPosts.filter(
+            (post) =>
+              getDaysAgo(post.date) >= new Date().getDay() + 8 + week * 7 &&
+              getDaysAgo(post.date) <= new Date().getDay() + 14 + week * 7 &&
+              !post.pinned
+          ).length > 0 && (
+            <div
+              className={classes.dropdown}
+              onClick={() => flipDropdown(5 + week)}
+            >
+              <MdArrowRight
+                className={`${classes.dropdownArrow} ${
+                  dropdowns[`${5 + week}`] ? classes.openDropdownArrow : ""
+                }`}
+              />
+              <span className={classes.dropdownTitle}>
+                {`${dayjs()
+                  .subtract(new Date().getDay() + 14 + week * 7, "day")
+                  .format("M/DD")} - ${dayjs()
+                  .subtract(new Date().getDay() + 8 + week * 7, "day")
+                  .format("M/DD")}`}
+              </span>
+            </div>
+          )}
           {dropdowns[`${5 + week}`] &&
             getPostPreviews(
-              posts.filter(
+              filteredPosts.filter(
                 (post) =>
                   getDaysAgo(post.date) >= new Date().getDay() + 8 + week * 7 &&
                   getDaysAgo(post.date) <=

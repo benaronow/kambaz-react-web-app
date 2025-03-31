@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link, useParams } from "react-router";
 import { makeStyles } from "tss-react/mui";
-import { LoginContext } from "../providers/LoginProvider";
+import { LoginContext } from "../providers/LoginProvider/LoginContext";
 
 const useStyles = makeStyles()({
   container: {

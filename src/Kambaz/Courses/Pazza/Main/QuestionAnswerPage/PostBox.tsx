@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import { PazzaContext } from "../../providers/PazzaProvider";
+import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
 import { makeStyles } from "tss-react/mui";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import { getTimeAgo } from "../../utils";
-import { LoginContext } from "../../providers/LoginProvider";
+import { LoginContext } from "../../providers/LoginProvider/LoginContext";
 
 const useStyles = makeStyles()({
   contentBox: {

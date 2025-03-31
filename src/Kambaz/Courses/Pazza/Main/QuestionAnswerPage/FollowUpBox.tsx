@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { makeStyles } from "tss-react/mui";
-import { PazzaContext } from "../../providers/PazzaProvider";
+import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
 import { FollowUp, Reply } from "../../pazzaTypes";
 import { getTimeAgo } from "../../utils";
 
