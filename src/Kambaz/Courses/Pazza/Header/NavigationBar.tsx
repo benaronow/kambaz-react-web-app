@@ -33,6 +33,7 @@ const useStyles = makeStyles()({
     fontSize: "15px",
     fontWeight: 900,
     marginRight: "25px",
+    whiteSpace: "nowrap",
   },
   activeLink: {
     textDecoration: "undef",

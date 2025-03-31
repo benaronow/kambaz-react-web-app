@@ -401,6 +401,11 @@ const useStyles = makeStyles()({
     borderRadius: "5px",
     background: "#3b74a1",
   },
+  unresolvedText: {
+    color: "#b23633",
+    fontSize: "10px",
+    fontWeight: 600,
+  },
 });
 
 interface SidebarProps {
@@ -628,6 +633,20 @@ export const Sidebar = ({
               {fPost.endorser && (
                 <span className={classes.instructorEndorsedText}>
                   <li>{`An instructor thinks this is a good ${fPost.type}`}</li>
+                </span>
+              )}
+              {fPost.followUps.filter((followUp) => !followUp.resolved).length >
+                0 && (
+                <span className={classes.unresolvedText}>
+                  <li>{`${
+                    fPost.followUps.filter((followUp) => !followUp.resolved)
+                      .length
+                  } Unresolved followup${
+                    fPost.followUps.filter((followUp) => !followUp.resolved)
+                      .length > 1
+                      ? "s"
+                      : ""
+                  }`}</li>
                 </span>
               )}
             </div>

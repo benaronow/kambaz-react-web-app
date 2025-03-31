@@ -93,6 +93,9 @@ const useStyles = makeStyles()({
     padding: "4px 5px",
     gap: "5px",
   },
+  unresolved: {
+    background: "#b23633",
+  },
   followUpEntryLower: {
     display: "flex",
   },
@@ -220,7 +223,11 @@ export const FollowUpBox = () => {
     return (
       <div className={classes.followUpEntryContainer}>
         <div className={classes.followUpEntryTop}>
-          <div className={classes.resolvedButtons}>
+          <div
+            className={`${classes.resolvedButtons} ${
+              !followUp.resolved && classes.unresolved
+            }`}
+          >
             <input
               type="radio"
               name="resolved"
