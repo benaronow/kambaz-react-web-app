@@ -5,13 +5,13 @@ import { ManageFoldersPage } from "./ManageFoldersPage";
 
 export const Main = () => {
   return (
-    <div>
+    <>
       <Routes>
         <Route path="/" element={<Navigate to="Home" />} />
         <Route path="Home" element={<QuestionAnswerPage />} />
         <Route path="Home/Post" element={<PostPage />} />
         <Route path="ManageClass/ManageFolders" element={<ManageFoldersPage />} />
       </Routes>
-    </div>
+    </>
   );
 };

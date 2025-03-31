@@ -5,8 +5,8 @@ import { Main } from "./Main";
 import { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
 import { RiArrowRightSFill } from "react-icons/ri";
-import { FilterType } from "./pazzaTypes";
-import { FiltersProvider } from "./providers/FiltersProvider";
+import { PazzaProvider } from "./providers/PazzaProvider";
+import { LoginProvider } from "./providers/LoginProvider";
 
 const useStyles = makeStyles()({
   container: {
@@ -17,6 +17,7 @@ const useStyles = makeStyles()({
   },
   mainContainer: {
     display: "flex",
+    width: "100%",
     height: "calc(100vh - 175px)",
   },
   tooltip: {
@@ -48,16 +49,11 @@ const useStyles = makeStyles()({
 export const Pazza = () => {
   const { classes } = useStyles();
 
-  const [filter, setFilter] = useState<FilterType>("");
   const [showSidebar, setShowSidebar] = useState(true);
   const [showActions, setShowActions] = useState(false);
   const [mouseOverPost, setMouseOverPost] = useState<{
     [key: string]: { [key: string]: boolean };
   }>({});
-
-  const changeFilter = (filter: FilterType) => {
-    setFilter(filter);
-  };
 
   const setMouseOverPostField = (
     post: string,
@@ -114,38 +110,38 @@ export const Pazza = () => {
       className={classes.container}
       onClick={() => setAllMouseOverPost("off")}
     >
-      <FiltersProvider>
-        <Header />
-        <div className={classes.mainContainer}>
-          {showSidebar ? (
-            <Sidebar
-              filter={filter}
-              changeFilter={changeFilter}
-              mouseOverPost={mouseOverPost}
-              setMouseOverPostField={setMouseOverPostField}
-              setAllMouseOverPost={setAllMouseOverPost}
-              showActions={showActions}
-              flipShowActions={flipShowActions}
-              flipShowSidebar={flipShowSidebar}
-            />
-          ) : (
-            <Tooltip
-              title="Expand feed"
-              arrow
-              placement="right"
-              className={classes.tooltip}
-            >
-              <div className={classes.expandArrowContainer}>
-                <RiArrowRightSFill
-                  className={classes.expandArrow}
-                  onClick={flipShowSidebar}
-                />
-              </div>
-            </Tooltip>
-          )}
-          <Main />
-        </div>
-      </FiltersProvider>
+      <LoginProvider>
+        <PazzaProvider>
+          <Header />
+          <div className={classes.mainContainer}>
+            {showSidebar ? (
+              <Sidebar
+                mouseOverPost={mouseOverPost}
+                setMouseOverPostField={setMouseOverPostField}
+                setAllMouseOverPost={setAllMouseOverPost}
+                showActions={showActions}
+                flipShowActions={flipShowActions}
+                flipShowSidebar={flipShowSidebar}
+              />
+            ) : (
+              <Tooltip
+                title="Expand feed"
+                arrow
+                placement="right"
+                className={classes.tooltip}
+              >
+                <div className={classes.expandArrowContainer}>
+                  <RiArrowRightSFill
+                    className={classes.expandArrow}
+                    onClick={flipShowSidebar}
+                  />
+                </div>
+              </Tooltip>
+            )}
+            <Main />
+          </div>
+        </PazzaProvider>
+      </LoginProvider>
     </div>
   );
 };

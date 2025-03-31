@@ -1,5 +1,8 @@
+import { useContext } from "react";
 import { FaFolder } from "react-icons/fa6";
 import { makeStyles } from "tss-react/mui";
+import { PazzaContext } from "../../providers/PazzaProvider";
+import { FolderType } from "../../pazzaTypes";
 
 const useStyles = makeStyles()({
   container: {
@@ -22,6 +25,11 @@ const useStyles = makeStyles()({
     color: "#6991b5",
   },
   folderTitle: {
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  firstFolder: {
     marginLeft: "10px",
   },
   vDivider: {
@@ -40,34 +48,55 @@ const useStyles = makeStyles()({
 
 export const FilteredFolders = () => {
   const { classes } = useStyles();
+  const { changeFilter } = useContext(PazzaContext);
+
+  const folders = [
+    "hw2",
+    "hw3",
+    "hw4",
+    "hw5",
+    "hw6",
+    "project",
+    "exam",
+    "logistics",
+    "other",
+    "office_hours",
+  ];
 
   return (
     <div className={classes.container}>
       <div className={classes.edge}></div>
       <div className={classes.folderAndTitle}>
         <FaFolder className={classes.grayFolder} />
-        <span className={classes.folderTitle}>LIVE Q&A</span>
+        <span className={`${classes.folderTitle} ${classes.firstFolder}`}>
+          LIVE Q&A
+        </span>
       </div>
       <div className={classes.vDivider}></div>
       <div className={classes.folderAndTitle}>
         <FaFolder className={classes.grayFolder} />
-        <span className={classes.folderTitle}>Drafts</span>
+        <span className={`${classes.folderTitle} ${classes.firstFolder}`}>
+          Drafts
+        </span>
       </div>
       <div className={classes.vDivider}></div>
       <div className={classes.folderAndTitle}>
         <FaFolder className={classes.blueFolder} />
-        <span className={classes.folderTitle}>hw1</span>
+        <span
+          className={`${classes.folderTitle} ${classes.firstFolder}`}
+          onClick={() => changeFilter("hw1")}
+        >
+          hw1
+        </span>
       </div>
-      <span>hw2</span>
-      <span>hw3</span>
-      <span>hw4</span>
-      <span>hw5</span>
-      <span>hw6</span>
-      <span>project</span>
-      <span>exam</span>
-      <span>logistics</span>
-      <span>other</span>
-      <span>office_hours</span>
+      {folders.map((f) => (
+        <span
+          className={classes.folderTitle}
+          onClick={() => changeFilter(f as FolderType)}
+        >
+          {f}
+        </span>
+      ))}
       <div className={classes.edge}></div>
     </div>
   );

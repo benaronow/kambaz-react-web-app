@@ -1,9 +1,11 @@
 export type UserType = "instructor" | "student";
 
 export interface User {
+  _id: string;
   type: UserType;
-  username: string;
+  name: string;
   profilePic: string;
+  viewedPosts: Post[];
 }
 
 export interface Authorable {
@@ -15,24 +17,46 @@ export interface Authorable {
 export type PostType = "question" | "note";
 
 export interface Post extends Authorable {
+  _id: string;
   type: PostType;
   title: string;
   pinned: boolean;
-  folder: string;
+  folder: FolderType;
   views: number;
-  instructorEndorsed: boolean;
+  endorser?: User | undefined;
   studentAnswer?: Answer;
   instructorAnswer?: Answer;
+  goodNotes: User[];
   followUps: FollowUp[];
 }
 
 export interface Answer extends Authorable {
-  instructorEndorsed: boolean;
-  thanks: number;
+  endorser?: User | undefined;
+  thanks: User[];
 }
 
 export interface FollowUp extends Authorable {
-  helpful: number;
+  replies: Reply[];
+  resolved: boolean;
+  helpful: User[];
 }
 
-export type FilterType = "Unread" | "Updated" | "Unresolved" | "Following" | '';
+export interface Reply extends Authorable {
+  helpful: User[];
+}
+
+export type PageType = "Q & A" | "Manage Classes" | "";
+
+export type FolderType =
+  | "hw1"
+  | "hw2"
+  | "hw3"
+  | "hw4"
+  | "hw5"
+  | "hw6"
+  | "project"
+  | "exam"
+  | "logistics"
+  | "other"
+  | "office_hours"
+  | "";

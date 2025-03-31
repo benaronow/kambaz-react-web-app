@@ -6,7 +6,7 @@ export const CourseNavigation = () => {
   const links = [
     "Home",
     "Modules",
-    "Piazza",
+    "Pazza",
     "Zoom",
     "Assignments",
     "Quizzes",

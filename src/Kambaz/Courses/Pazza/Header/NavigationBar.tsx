@@ -1,6 +1,7 @@
-import { MdAccountBox } from "react-icons/md";
-import { Link } from "react-router";
+import { useContext } from "react";
+import { Link, useParams } from "react-router";
 import { makeStyles } from "tss-react/mui";
+import { LoginContext } from "../providers/LoginProvider";
 
 const useStyles = makeStyles()({
   container: {
@@ -39,20 +40,25 @@ const useStyles = makeStyles()({
   courseLink: {
     marginRight: "55px",
   },
+  accountButton: {
+    background: "none",
+    border: "none",
+  },
   accountBox: {
-    height: "35px",
-    width: "35px",
+    border: "solid 1px white",
     marginRight: "5px",
   },
 });
 
 export const NavigationBar = () => {
   const { classes } = useStyles();
+  const { cid } = useParams();
+  const { currentUser } = useContext(LoginContext);
 
   return (
     <div className={classes.container}>
       <div className={classes.left}>
-        <Link to="/Kambaz/Courses/1234/Pazza">
+        <Link to={`/Kambaz/Courses/${cid}/Pazza`}>
           <img
             width="90px"
             height="39"
@@ -62,37 +68,27 @@ export const NavigationBar = () => {
         </Link>
       </div>
       <div className={classes.right}>
-        <Link
-          to="/Kambaz/Courses/1234/Pazza"
-          className={`${classes.link} ${classes.courseLink}`}
-        >
-          <span>CS1234</span>
-        </Link>
-        <Link to="/Kambaz/Courses/1234/Pazza" className={classes.link}>
+        <span className={`${classes.link} ${classes.courseLink}`}>CS1234</span>
+        <Link to={`/Kambaz/Courses/${cid}/Pazza`} className={classes.link}>
           <span>Q & A</span>
         </Link>
+        <span className={`${classes.link}`}>Resources</span>
+        <span className={`${classes.link}`}>Statistics</span>
         <Link
-          to="/Kambaz/Courses/1234/Pazza/Resources"
-          className={classes.link}
-        >
-          <span>Resources</span>
-        </Link>
-        <Link
-          to="/Kambaz/Courses/1234/Pazza/Statistics"
-          className={classes.link}
-        >
-          <span>Statistics</span>
-        </Link>
-        <Link
-          to="/Kambaz/Courses/1234/Pazza/ManageClass"
+          to={`/Kambaz/Courses/${cid}/Pazza/ManageClass`}
           className={classes.link}
         >
           <span>Manage Class</span>
         </Link>
-        <Link to="/Kambaz/Courses/1234/Pazza/Account" className={classes.link}>
-          <MdAccountBox className={classes.accountBox} />
-          <span>Ben Aronow</span>
-        </Link>
+        <button className={`${classes.link} ${classes.accountButton}`}>
+          <img
+            className={classes.accountBox}
+            height={25}
+            width={25}
+            src={`${currentUser?.profilePic}`}
+          />
+          <span>{currentUser?.name}</span>
+        </button>
       </div>
     </div>
   );

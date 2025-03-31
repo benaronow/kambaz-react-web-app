@@ -1,9 +1,9 @@
 import { makeStyles } from "tss-react/mui";
 import { posts } from "../sampleData";
 import { getDaysAgo } from "../dateUtils";
-import { FilterType, Post } from "../pazzaTypes";
+import { Post } from "../pazzaTypes";
 import { MdArrowRight, MdNoteAdd } from "react-icons/md";
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { ImCheckmark } from "react-icons/im";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -11,6 +11,8 @@ import { BiX } from "react-icons/bi";
 import { RiArrowLeftSFill } from "react-icons/ri";
 import { IoIosSettings, IoMdArrowDropdown } from "react-icons/io";
 import { Tooltip } from "@mui/material";
+import { PazzaContext } from "../providers/PazzaProvider";
+import { LoginContext } from "../providers/LoginProvider";
 
 const useStyles = makeStyles()({
   container: {
@@ -59,10 +61,11 @@ const useStyles = makeStyles()({
     justifyContent: "flex-end",
     alignItems: "center",
     width: "100%",
+    whiteSpace: "nowrap",
   },
   menuSettingsGear: {
     color: "gray",
-    marginLeft: "2px",
+    marginLeft: "5px",
   },
   menuSettingsArrow: {
     color: "gray",
@@ -223,6 +226,12 @@ const useStyles = makeStyles()({
     borderBottom: "solid #cbcacd",
     borderWidth: "1px",
   },
+  selectedPost: {
+    background: "#fff7ce",
+  },
+  unansweredPost: {
+    background: "#fde4e0",
+  },
   postLeft: {
     display: "flex",
     flexDirection: "column",
@@ -230,6 +239,8 @@ const useStyles = makeStyles()({
     minWidth: "20px",
     marginRight: "3px",
     justifyContent: "flex-start",
+    alignItems: "center",
+    position: "relative",
   },
   postCenter: {
     display: "flex",
@@ -239,7 +250,8 @@ const useStyles = makeStyles()({
   },
   postTop: {
     display: "flex",
-    height: "20px",
+    height: "22px",
+    alignItems: "flex-start",
   },
   postTopRight: {
     display: "flex",
@@ -380,11 +392,18 @@ const useStyles = makeStyles()({
     fontSize: "10px",
     fontWeight: 600,
   },
+  unviewedCircle: {
+    position: "absolute",
+    top: "50%",
+    transform: "translateY(-50%)",
+    height: "10px",
+    width: "10px",
+    borderRadius: "5px",
+    background: "#3b74a1",
+  },
 });
 
 interface SidebarProps {
-  filter: string;
-  changeFilter: (filter: FilterType) => void;
   mouseOverPost: {
     [key: string]: { [key: string]: boolean };
   };
@@ -400,8 +419,6 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({
-  filter,
-  changeFilter,
   mouseOverPost,
   setMouseOverPostField,
   setAllMouseOverPost,
@@ -410,6 +427,8 @@ export const Sidebar = ({
   flipShowSidebar,
 }: SidebarProps) => {
   const { classes } = useStyles();
+  const { currentUser, viewPost } = useContext(LoginContext);
+  const { filter, changeFilter, post, changePost } = useContext(PazzaContext);
 
   const [overMenuSettings, setOverMenuSettings] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -440,6 +459,7 @@ export const Sidebar = ({
       }
     });
     setWeeks(acc);
+    if (post) viewPost(post);
   }, []);
 
   const flipDropdown = (dropdown: number) => {
@@ -509,7 +529,7 @@ export const Sidebar = ({
               className={`${classes.answerBadge} ${classes.studentAnswerBadge}`}
             >
               <span>s</span>
-              {fPost.studentAnswer.instructorEndorsed && (
+              {fPost.studentAnswer.endorser && (
                 <ImCheckmark className={classes.ieCheckmark} />
               )}
             </div>
@@ -528,13 +548,25 @@ export const Sidebar = ({
         posts.push(
           <div
             key={idx}
-            className={classes.post}
+            className={`${classes.post} ${
+              post?.title === fPost.title
+                ? classes.selectedPost
+                : !fPost.studentAnswer &&
+                  !fPost.instructorAnswer &&
+                  fPost.type === "question"
+                ? classes.unansweredPost
+                : ""
+            }`}
             onMouseEnter={() =>
               setMouseOverPostField(fPost.title, "show", "on")
             }
             onMouseLeave={() =>
               setMouseOverPostField(fPost.title, "show", "off")
             }
+            onClick={() => {
+              changePost(fPost);
+              viewPost(fPost);
+            }}
           >
             <div className={classes.postLeft}>
               <div
@@ -564,6 +596,9 @@ export const Sidebar = ({
                   )
                 )}
               </div>
+              {!currentUser?.viewedPosts.find(
+                (post) => post._id === fPost._id
+              ) && <div className={classes.unviewedCircle} />}
             </div>
             <div className={classes.postCenter}>
               <div className={classes.postTop}>
@@ -590,7 +625,7 @@ export const Sidebar = ({
                   ))}
                 </div>
               </div>
-              {fPost.instructorEndorsed && (
+              {fPost.endorser && (
                 <span className={classes.instructorEndorsedText}>
                   <li>{`An instructor thinks this is a good ${fPost.type}`}</li>
                 </span>
@@ -614,30 +649,10 @@ export const Sidebar = ({
           </div>
         </Tooltip>
         <div className={classes.vDivider} />
-        <span
-          className={classes.menuText}
-          onClick={() => changeFilter("Updated")}
-        >
-          Updated
-        </span>
-        <span
-          className={classes.menuText}
-          onClick={() => changeFilter("Unread")}
-        >
-          Unread
-        </span>
-        <span
-          className={classes.menuText}
-          onClick={() => changeFilter("Unresolved")}
-        >
-          Unresolved
-        </span>
-        <span
-          className={classes.menuText}
-          onClick={() => changeFilter("Following")}
-        >
-          Following
-        </span>
+        <span className={classes.menuText}>Updated</span>
+        <span className={classes.menuText}>Unread</span>
+        <span className={classes.menuText}>Unresolved</span>
+        <span className={classes.menuText}>Following</span>
         <div className={classes.menuEnd}>
           <div className={classes.vDivider} />
           <div

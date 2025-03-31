@@ -1,64 +1,84 @@
 import { genDate } from "./dateUtils";
-import { Answer, Post, User } from "./pazzaTypes";
+import { Answer, FollowUp, Post, Reply, User } from "./pazzaTypes";
 
 export const instructor1: User = {
+  _id: "123",
   type: "instructor",
-  username: "Instructor1",
-  profilePic: "/images/profiles/redpanda.png",
+  name: "Instructor 1",
+  profilePic: "/public/profiles/redpanda.png",
+  viewedPosts: [],
 };
 
 export const instructor2: User = {
+  _id: "234",
   type: "instructor",
-  username: "Instructor2",
-  profilePic: "/images/profiles/chimp.png",
+  name: "Instructor 2",
+  profilePic: "/public/profiles/chimp.png",
+  viewedPosts: [],
 };
 
 export const instructor3: User = {
+  _id: "345",
   type: "instructor",
-  username: "Instructor3",
-  profilePic: "/images/profiles/crocodile.png",
+  name: "Instructor 3",
+  profilePic: "/public/profiles/crocodile.png",
+  viewedPosts: [],
 };
 
 export const student1: User = {
+  _id: "456",
   type: "student",
-  username: "Student1",
-  profilePic: "/images/profiles/elephant.png",
+  name: "Student 1",
+  profilePic: "/public/profiles/elephant.png",
+  viewedPosts: [],
 };
 
 export const student2: User = {
+  _id: "567",
   type: "student",
-  username: "Student2",
-  profilePic: "/images/profiles/goat.png",
+  name: "Student 2",
+  profilePic: "/public/profiles/goat.png",
+  viewedPosts: [],
 };
 
 export const student3: User = {
+  _id: "678",
   type: "student",
-  username: "Student3",
-  profilePic: "/images/profiles/koala.png",
+  name: "Student 3",
+  profilePic: "/public/profiles/koala.png",
+  viewedPosts: [],
 };
 
 export const student4: User = {
+  _id: "789",
   type: "student",
-  username: "Student4",
-  profilePic: "/images/profiles/panda.png",
+  name: "Student 4",
+  profilePic: "/public/profiles/panda.png",
+  viewedPosts: [],
 };
 
 export const student5: User = {
+  _id: "890",
   type: "student",
-  username: "Student5",
-  profilePic: "/images/profiles/pig.png",
+  name: "Student 5",
+  profilePic: "/public/profiles/pig.png",
+  viewedPosts: [],
 };
 
 export const student6: User = {
+  _id: "901",
   type: "student",
-  username: "Student6",
-  profilePic: "/images/profiles/tiger.png",
+  name: "Student 6",
+  profilePic: "/public/profiles/tiger.png",
+  viewedPosts: [],
 };
 
 export const student7: User = {
+  _id: "012",
   type: "student",
-  username: "Student7",
-  profilePic: "/images/profiles/toucan.png",
+  name: "Student 7",
+  profilePic: "/public/profiles/toucan.png",
+  viewedPosts: [],
 };
 
 export const instructors = [instructor1, instructor2, instructor3];
@@ -77,64 +97,64 @@ export const studentAnswer1: Answer = {
   text: "This is the first student answer.",
   author: student1,
   date: genDate(19),
-  instructorEndorsed: true,
-  thanks: 15,
+  endorser: instructor1,
+  thanks: users.slice(0, 8),
 };
 
 export const studentAnswer2: Answer = {
   text: "This is the second student answer.",
   author: student3,
   date: genDate(16),
-  instructorEndorsed: false,
-  thanks: 11,
+  endorser: undefined,
+  thanks: users.slice(0, 7),
 };
 
 export const studentAnswer3: Answer = {
   text: "This is the third student answer.",
   author: student5,
   date: genDate(10),
-  instructorEndorsed: true,
-  thanks: 7,
+  endorser: instructor2,
+  thanks: users.slice(0, 6),
 };
 
 export const studentAnswer4: Answer = {
   text: "This is the fourth student answer.",
   author: student7,
   date: genDate(7),
-  instructorEndorsed: false,
-  thanks: 3,
+  endorser: undefined,
+  thanks: users.slice(0, 5),
 };
 
 export const instructorAnswer1: Answer = {
   text: "This is the first instructor answer.",
   author: instructor1,
   date: genDate(18),
-  instructorEndorsed: false,
-  thanks: 13,
+  endorser: undefined,
+  thanks: users.slice(0, 4),
 };
 
 export const instructorAnswer2: Answer = {
   text: "This is the second instructor answer.",
   author: instructor2,
   date: genDate(13),
-  instructorEndorsed: true,
-  thanks: 9,
+  endorser: instructor3,
+  thanks: users.slice(0, 3),
 };
 
 export const instructorAnswer3: Answer = {
   text: "This is the third instructor answer.",
   author: instructor3,
   date: genDate(9),
-  instructorEndorsed: false,
-  thanks: 5,
+  endorser: undefined,
+  thanks: users.slice(0, 2),
 };
 
 export const instructorAnswer4: Answer = {
   text: "This is the fourth instructor answer.",
   author: instructor1,
   date: genDate(4),
-  instructorEndorsed: true,
-  thanks: 1,
+  endorser: instructor1,
+  thanks: users.slice(0, 1),
 };
 
 export const studentAnswers = [
@@ -151,7 +171,33 @@ export const instructorAnswers = [
 ];
 export const answers = [...studentAnswers, ...instructorAnswers];
 
+export const reply1: Reply = {
+  text: "This is a reply to the first followup.",
+  author: instructor1,
+  date: genDate(5),
+  helpful: [],
+};
+
+export const followUp1: FollowUp = {
+  text: "This is the first followup.",
+  author: student1,
+  date: genDate(10),
+  replies: [reply1],
+  resolved: true,
+  helpful: [student1],
+};
+
+export const followUp2: FollowUp = {
+  text: "This is the second followup.",
+  author: student2,
+  date: genDate(0),
+  replies: [],
+  resolved: false,
+  helpful: [],
+};
+
 export const note1: Post = {
+  _id: "123",
   text: "This is the first note.",
   author: instructor1,
   date: genDate(21),
@@ -160,11 +206,13 @@ export const note1: Post = {
   pinned: true,
   folder: "other",
   views: 10,
-  instructorEndorsed: false,
-  followUps: [],
+  endorser: undefined,
+  goodNotes: users,
+  followUps: [followUp2],
 };
 
 export const note2: Post = {
+  _id: "234",
   text: "This is the second note.",
   author: instructor2,
   date: genDate(11),
@@ -173,11 +221,13 @@ export const note2: Post = {
   pinned: false,
   folder: "other",
   views: 7,
-  instructorEndorsed: false,
+  endorser: undefined,
+  goodNotes: users.slice(0, 9),
   followUps: [],
 };
 
 export const note3: Post = {
+  _id: "345",
   text: "This is the third note.",
   author: instructor3,
   date: genDate(1),
@@ -186,11 +236,13 @@ export const note3: Post = {
   pinned: false,
   folder: "other",
   views: 4,
-  instructorEndorsed: false,
+  endorser: undefined,
+  goodNotes: users.slice(0, 8),
   followUps: [],
 };
 
 export const question1: Post = {
+  _id: "456",
   text: "This is the first question.",
   author: student1,
   date: genDate(20),
@@ -199,13 +251,15 @@ export const question1: Post = {
   pinned: false,
   folder: "hw1",
   views: 12,
-  instructorEndorsed: true,
+  endorser: instructor1,
   studentAnswer: studentAnswer1,
   instructorAnswer: instructorAnswer1,
-  followUps: [],
+  goodNotes: users.slice(0, 7),
+  followUps: [followUp1],
 };
 
 export const question2: Post = {
+  _id: "567",
   text: "This is the second question.",
   author: student2,
   date: genDate(17),
@@ -214,12 +268,14 @@ export const question2: Post = {
   pinned: false,
   folder: "hw1",
   views: 10,
-  instructorEndorsed: false,
+  endorser: undefined,
   studentAnswer: studentAnswer2,
+  goodNotes: users.slice(0, 6),
   followUps: [],
 };
 
 export const question3: Post = {
+  _id: "678",
   text: "This is the third question.",
   author: student3,
   date: genDate(14),
@@ -228,12 +284,14 @@ export const question3: Post = {
   pinned: false,
   folder: "project",
   views: 8,
-  instructorEndorsed: true,
+  endorser: instructor2,
   instructorAnswer: instructorAnswer2,
+  goodNotes: users.slice(0, 5),
   followUps: [],
 };
 
 export const question4: Post = {
+  _id: "789",
   text: "This is the fourth question.",
   author: student4,
   date: genDate(11),
@@ -242,13 +300,15 @@ export const question4: Post = {
   pinned: false,
   folder: "hw2",
   views: 6,
-  instructorEndorsed: false,
+  endorser: undefined,
   studentAnswer: studentAnswer3,
   instructorAnswer: instructorAnswer3,
+  goodNotes: users.slice(0, 4),
   followUps: [],
 };
 
 export const question5: Post = {
+  _id: "890",
   text: "This is the fifth question.",
   author: student5,
   date: genDate(8),
@@ -257,12 +317,14 @@ export const question5: Post = {
   pinned: false,
   folder: "hw2",
   views: 4,
-  instructorEndorsed: true,
+  endorser: instructor3,
   studentAnswer: studentAnswer4,
+  goodNotes: users.slice(0, 3),
   followUps: [],
 };
 
 export const question6: Post = {
+  _id: "901",
   text: "This is the sixth question.",
   author: student6,
   date: genDate(5),
@@ -271,12 +333,14 @@ export const question6: Post = {
   pinned: false,
   folder: "hw3",
   views: 2,
-  instructorEndorsed: false,
+  endorser: undefined,
   instructorAnswer: instructorAnswer4,
+  goodNotes: users.slice(0, 2),
   followUps: [],
 };
 
 export const question7: Post = {
+  _id: "012",
   text: "This is the seventh question.",
   author: student7,
   date: genDate(0),
@@ -285,7 +349,8 @@ export const question7: Post = {
   pinned: false,
   folder: "project",
   views: 0,
-  instructorEndorsed: true,
+  endorser: instructor1,
+  goodNotes: users.slice(0, 1),
   followUps: [],
 };
 
