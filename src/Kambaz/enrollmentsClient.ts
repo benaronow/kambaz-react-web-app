@@ -10,7 +10,7 @@ export const fetchDbEnrollments = async () => {
   const { data } = await axios.get(`${ENROLLMENTS_API}`);
   return data;
 };
-export const deleteDbEnrollment = async (enrollment: any) => {
-  const { data } = await axios.delete(`${ENROLLMENTS_API}`, enrollment);
+export const deleteDbEnrollment = async (enrollmentId: string) => {
+  const { data } = await axios.delete(`${ENROLLMENTS_API}/${enrollmentId}`);
   return data;
 };

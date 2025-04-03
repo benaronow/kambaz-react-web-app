@@ -24,9 +24,7 @@ export const Dashboard = () => {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
   console.log(enrollments);
-  const { courses, allCourses } = useSelector(
-    (state: any) => state.coursesReducer
-  );
+  const { allCourses } = useSelector((state: any) => state.coursesReducer);
   const [displayAllCourses, setDisplayAllCourses] = useState(false);
 
   const [course, setCourse] = useState<any>({
@@ -61,7 +59,12 @@ export const Dashboard = () => {
   }, []);
 
   const getIsEnrolled = (course: any) =>
-    courses.find((c: any) => c._id === course._id) !== undefined;
+    enrollments.find(
+      (enrollment: any) =>
+        enrollment.user === currentUser._id && enrollment.course === course._id
+    );
+
+  const courses = allCourses.filter((course: any) => getIsEnrolled(course));
 
   return (
     <div id="wd-dashboard">
@@ -178,10 +181,13 @@ export const Dashboard = () => {
                               event.preventDefault();
                               dispatch(
                                 getIsEnrolled(course)
-                                  ? deleteEnrollment({
-                                      user: currentUser._id,
-                                      course: course._id,
-                                    })
+                                  ? deleteEnrollment(
+                                      enrollments.find(
+                                        (enrollment: any) =>
+                                          enrollment.user === currentUser._id &&
+                                          enrollment.course === course._id
+                                      )
+                                    )
                                   : addEnrollment({
                                       user: currentUser._id,
                                       course: course._id,
