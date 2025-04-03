@@ -24,20 +24,22 @@ const coursesSlice = createSlice({
         credits: course.credits,
         description: course.description,
       };
-      state.courses = [...state.courses, newCourse] as any;
+      state.allCourses = [...state.allCourses, newCourse] as any;
     },
     deleteCourse: (state, { payload: courseId }) => {
       deleteDbCourse(courseId);
-      state.courses = state.courses.filter((c: any) => c._id !== courseId);
+      state.allCourses = state.allCourses.filter(
+        (c: any) => c._id !== courseId
+      );
     },
     updateCourse: (state, { payload: course }) => {
       updateDbCourse(course);
-      state.courses = state.courses.map((c: any) =>
+      state.allCourses = state.allCourses.map((c: any) =>
         c._id === course._id ? course : c
       ) as any;
     },
     editCourse: (state, { payload: courseId }) => {
-      state.courses = state.courses.map((c: any) =>
+      state.allCourses = state.allCourses.map((c: any) =>
         c._id === courseId ? { ...c, editing: true } : c
       ) as any;
     },
