@@ -2,14 +2,14 @@
 import { Button, Card, Col, FormControl, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addCourse, deleteCourse, updateCourse } from "./Courses/reducer";
 import { useState } from "react";
 import { addEnrollment, deleteEnrollment } from "./enrollmentsReducer";
+import * as userClient from "./Account/client";
+import * as courseClient from "./Courses/client";
 
-export const Dashboard = ({ courses }: { courses: any[] }) => {
+export const Dashboard = ({ courses, setCourses }: { courses: any[], setCourses: (courses: any[]) => void }) => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
   const [displayAllCourses, setDisplayAllCourses] = useState(false);
 
   const [course, setCourse] = useState<any>({
@@ -22,15 +22,30 @@ export const Dashboard = ({ courses }: { courses: any[] }) => {
   });
 
   const getIsEnrolled = (course: any) =>
-    courses
-      .filter((course) =>
-        enrollments.some(
-          (enrollment: any) =>
-            enrollment.user === currentUser._id &&
-            enrollment.course === course._id
-        )
-      )
-      .find((c) => c._id === course._id) !== undefined;
+    courses.find((c) => c._id === course._id) !== undefined;
+
+  const addNewCourse = async (course: any) => {
+    const newCourse = await userClient.createCourse(course);
+    setCourses([...courses, newCourse]);
+  };
+
+  const deleteCourse = async (courseId: string) => {
+    await courseClient.deleteCourse(courseId);
+    setCourses(courses.filter((course) => course._id !== courseId));
+  };
+
+  const updateCourse = async (course: any) => {
+    await courseClient.updateCourse(course);
+    setCourses(
+      courses.map((c) => {
+        if (c._id === course._id) {
+          return course;
+        } else {
+          return c;
+        }
+      })
+    );
+  };
 
   return (
     <div id="wd-dashboard">
@@ -52,13 +67,13 @@ export const Dashboard = ({ courses }: { courses: any[] }) => {
             <button
               className="btn btn-primary float-end"
               id="wd-add-new-course-click"
-              onClick={() => dispatch(addCourse(course))}
+              onClick={() => addNewCourse(course)}
             >
               Add
             </button>
             <button
               className="btn btn-warning float-end me-2"
-              onClick={() => dispatch(updateCourse(course))}
+              onClick={() => updateCourse(course)}
               id="wd-update-course-click"
             >
               Update
@@ -87,17 +102,12 @@ export const Dashboard = ({ courses }: { courses: any[] }) => {
       <hr />
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {(displayAllCourses
-            ? courses
-            : courses.filter((course) =>
-                enrollments.some(
-                  (enrollment: any) =>
-                    enrollment.user === currentUser._id &&
-                    enrollment.course === course._id
-                )
-              )
-          ).map((course) => (
-            <Col className="wd-dashboard-course" style={{ width: "300px" }}>
+          {courses.map((course, idx) => (
+            <Col
+              key={idx}
+              className="wd-dashboard-course"
+              style={{ width: "300px" }}
+            >
               <Card>
                 <Link
                   to={`/Kambaz/Courses/${course._id}/Home`}
@@ -125,7 +135,7 @@ export const Dashboard = ({ courses }: { courses: any[] }) => {
                         <button
                           onClick={(event) => {
                             event.preventDefault();
-                            dispatch(deleteCourse(course._id));
+                            deleteCourse(course._id);
                           }}
                           className="btn btn-danger float-end"
                           id="wd-delete-course-click"
