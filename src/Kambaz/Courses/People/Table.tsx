@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import * as db from "../../Database";
+import users from "../../Database/users.json";
+import { useSelector } from "react-redux";
 
 export const PeopleTable = () => {
   const { cid } = useParams();
-  const { users, enrollments } = db;
+  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
   return (
     <div id="wd-people-table">
@@ -22,10 +24,10 @@ export const PeopleTable = () => {
         </thead>
         <tbody>
           {users
-            .filter((usr) =>
+            .filter((user: any) =>
               enrollments.some(
-                (enrollment) =>
-                  enrollment.user === usr._id && enrollment.course === cid
+                (enrollment: any) =>
+                  enrollment.user === user._id && enrollment.course === cid
               )
             )
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

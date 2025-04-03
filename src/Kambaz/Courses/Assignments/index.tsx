@@ -22,7 +22,6 @@ export const Assignments = ({
 }: AssignmentsProps) => {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
-  console.log(assignments);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
