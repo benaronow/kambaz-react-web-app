@@ -13,7 +13,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { Assignment } from "./AssignmentItem";
 import { useDispatch, useSelector } from "react-redux";
 import { ChangeEvent, useState } from "react";
-import { addAssignment, updateAssigment } from "./reducer";
+import { addAssignment, updateAssignment } from "./reducer";
 
 export const AssignmentEditor = () => {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export const AssignmentEditor = () => {
     dispatch(
       pathname.includes("new")
         ? addAssignment(assignment)
-        : updateAssigment(assignment)
+        : updateAssignment(assignment)
     );
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };

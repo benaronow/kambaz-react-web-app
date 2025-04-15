@@ -6,7 +6,10 @@ import { BiPlus, BiSolidDownArrow } from "react-icons/bi";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Link, useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDbAssignments } from "./client";
+import { useEffect } from "react";
+import { setAssignments } from "./reducer";
 
 interface AssignmentsProps {
   setDeleteAssignmentId: (id: string) => void;
@@ -20,6 +23,16 @@ export const Assignments = ({
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const dispatch = useDispatch();
+
+  const fetchAssignments = async () => {
+    const assignments = await fetchDbAssignments(cid || "");
+    dispatch(setAssignments(assignments));
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
 
   return (
     <div id="wd-assignments" className="ms-5 me-5">

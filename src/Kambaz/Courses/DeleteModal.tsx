@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { deleteAssigment } from "./Assignments/reducer";
+import { deleteAssignment } from "./Assignments/reducer";
 
 interface DeleteModalProps {
   assignmentId: string;
@@ -46,7 +46,7 @@ export const DeleteModal = ({
         <Button
           className="bg-danger border-0"
           onClick={() => {
-            dispatch(deleteAssigment(assignmentId));
+            dispatch(deleteAssignment(assignmentId));
             setDeleteModalOpen(false);
           }}
         >
