@@ -4,6 +4,7 @@ import { Signin } from "./Signin";
 import { Profile } from "./Profile";
 import { Signup } from "./Signup";
 import { useSelector } from "react-redux";
+import Users from "./Users";
 
 export const Account = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +35,8 @@ export const Account = () => {
                 <Route path="/Signin" element={<Signin />} />
                 <Route path="/Profile" element={<Profile />} />
                 <Route path="/Signup" element={<Signup />} />
+                <Route path="/Users" element={<Users />} />
+                <Route path="/Users/:uid" element={<Users />} />
               </Routes>
             </td>
           </tr>
