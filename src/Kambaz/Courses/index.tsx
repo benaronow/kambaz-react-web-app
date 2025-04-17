@@ -9,6 +9,7 @@ import { PeopleTable } from "./People/Table";
 import { useEffect, useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 import * as coursesClient from "./client";
+import { Pazza } from "./Pazza";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Courses = ({ courses }: { courses: any[] }) => {
@@ -46,6 +47,7 @@ export const Courses = ({ courses }: { courses: any[] }) => {
             <Route path="/" element={<Navigate to="Home" />} />
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
+            <Route path="Pazza/*" element={<Pazza />} />
             <Route
               path="Assignments"
               element={
