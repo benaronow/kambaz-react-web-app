@@ -67,7 +67,7 @@ export const AssignmentItem = ({
             {` ${
               MONTHMAP[`m${assignment.endMonth}` as keyof typeof MONTHMAP]
             } `}
-            {assignment.endDay} at 11:59pm | 100 pts
+            {assignment.endDay} at 11:59pm | {assignment.points} pts
           </span>
         </div>
         <div className="wd-lesson-control me-3">

@@ -5,7 +5,11 @@ export const AccountNavigation = () => {
   const location = useLocation();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
+  const links = currentUser
+    ? currentUser.role === "ADMIN"
+      ? ["Profile", "Users"]
+      : ["Profile"]
+    : ["Signin", "Signup"];
 
   const getColor = (pathname: string) => {
     return location.pathname.includes(`Kambaz/Account/${pathname}`)
