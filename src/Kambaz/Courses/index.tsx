@@ -6,8 +6,9 @@ import { Assignments } from "./Assignments";
 import { AssignmentEditor } from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa6";
 import { PeopleTable } from "./People/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DeleteModal } from "./DeleteModal";
+import * as coursesClient from "./client";
 import { Pazza } from "./Pazza";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,6 +16,17 @@ export const Courses = ({ courses }: { courses: any[] }) => {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+
+  const [courseUsers, setCourseUsers] = useState([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const users = await coursesClient.findUsersForCourse(cid ?? "");
+      setCourseUsers(users);
+    };
+
+    fetchUsers();
+  }, [cid]);
+  console.log(courseUsers);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteAssignmentId, setDeleteAssignmentId] = useState("");
@@ -47,7 +59,10 @@ export const Courses = ({ courses }: { courses: any[] }) => {
             />
             <Route path="Assignments/new" element={<AssignmentEditor />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
-            <Route path="People" element={<PeopleTable />} />
+            <Route
+              path="People"
+              element={<PeopleTable users={courseUsers} />}
+            />
           </Routes>
         </div>
       </div>

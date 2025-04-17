@@ -1,16 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice } from "@reduxjs/toolkit";
-import { assignments } from "../../Database";
 import { v4 as uuidv4 } from "uuid";
+import {
+  createDbAssignment,
+  deleteDbAssignment,
+  updateDbAssignment,
+} from "./client";
 
 const initialState = {
-  assignments: assignments,
+  assignments: [],
 };
 const assignmentsSlice = createSlice({
   name: "assignments",
   initialState,
   reducers: {
     addAssignment: (state, { payload: assignment }) => {
+      createDbAssignment(assignment);
       const newAssigment: any = {
         _id: uuidv4(),
         title: assignment.title,
@@ -25,27 +30,33 @@ const assignmentsSlice = createSlice({
       };
       state.assignments = [...state.assignments, newAssigment] as any;
     },
-    deleteAssigment: (state, { payload: assignmentId }) => {
+    deleteAssignment: (state, { payload: assignmentId }) => {
+      deleteDbAssignment(assignmentId);
       state.assignments = state.assignments.filter(
         (a: any) => a._id !== assignmentId
       );
     },
-    updateAssigment: (state, { payload: assigment }) => {
+    updateAssignment: (state, { payload: assigment }) => {
+      updateDbAssignment(assigment);
       state.assignments = state.assignments.map((a: any) =>
         a._id === assigment._id ? assigment : a
       ) as any;
     },
-    editAssigment: (state, { payload: assigmentId }) => {
+    editAssignment: (state, { payload: assigmentId }) => {
       state.assignments = state.assignments.map((a: any) =>
         a._id === assigmentId ? { ...a, editing: true } : a
       ) as any;
+    },
+    setAssignments: (state, { payload: assignments }) => {
+      state.assignments = assignments;
     },
   },
 });
 export const {
   addAssignment,
-  deleteAssigment,
-  updateAssigment,
-  editAssigment,
+  deleteAssignment,
+  updateAssignment,
+  editAssignment,
+  setAssignments,
 } = assignmentsSlice.actions;
 export default assignmentsSlice.reducer;

@@ -6,18 +6,9 @@ export const ProtectedRoute = ({ children }: { children: any }) => {
   const { cid } = useParams();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { courses } = useSelector((state: any) => state.coursesReducer);
-  const { enrollments } = useSelector((state: any) => state.enrollmentsReducer);
 
   const getIsEnrolled = (cid: any) =>
-    courses
-      .filter((course: any) =>
-        enrollments.some(
-          (enrollment: any) =>
-            enrollment.user === currentUser._id &&
-            enrollment.course === course._id
-        )
-      )
-      .find((c: any) => c._id === cid) !== undefined;
+    courses?.find((c: any) => c._id === cid) !== undefined;
 
   const canAccess = () => {
     return cid ? getIsEnrolled(cid) : true;
