@@ -1,0 +1,213 @@
+[
+  {
+    "_id": "123",
+    "text": "This is the first note.",
+    "author": "123",
+    "date": "2025-03-07",
+    "type": "NOTE",
+    "title": "Note 1",
+    "pinned": true,
+    "folder": "OTHER",
+    "views": ["123, 234, 345, 456, 567, 678, 789, 890, 777"],
+    "goodNotes": ["123, 234, 345, 456, 567, 678, 789, 890"],
+    "followUps": [
+      {
+        "text": "This is the second followup.",
+        "author": "456",
+        "date": "2025-04-17",
+        "replies": [],
+        "resolved": false,
+        "helpful": []
+      }
+    ]
+  },
+  {
+    "_id": "234",
+    "text": "This is the second note.",
+    "author": "678",
+    "date": "2025-04-06",
+    "type": "NOTE",
+    "title": "Note 2",
+    "pinned": false,
+    "folder": "OTHER",
+    "views": ["123, 234, 345, 456, 567, 678, 789"],
+    "goodNotes": ["123, 234, 345, 456, 567, 678"],
+    "followUps": []
+  },
+  {
+    "_id": "345",
+    "text": "This is the third note.",
+    "author": "345",
+    "date": "2025-04-16",
+    "type": "NOTE",
+    "title": "Note 3",
+    "pinned": false,
+    "folder": "OTHER",
+    "views": ["123, 234, 345, 456"],
+    "goodNotes": ["123, 234, 345"],
+    "followUps": []
+  },
+  {
+    "_id": "456",
+    "text": "This is the first question.",
+    "author": "234",
+    "date": "2025-03-28",
+    "type": "QUESTION",
+    "title": "Question 1",
+    "pinned": false,
+    "folder": "HW1",
+    "views": ["123, 234, 345, 456, 567, 678, 789, 890"],
+    "endorser": "123",
+    "studentAnswer": {
+      "text": "This is the first student answer.",
+      "author": "234",
+      "date": "2025-03-29",
+      "endorser": "123",
+      "thanks": ["123, 234, 345, 456, 567, 678, 789, 890"]
+    },
+    "instructorAnswer": {
+      "text": "This is the first instructor answer.",
+      "author": "123",
+      "date": "2025-03-30",
+      "thanks": ["123, 234, 345, 456"]
+    },
+    "goodNotes": ["123, 234, 345, 456, 567, 678, 789"],
+    "followUps": [
+      {
+        "text": "This is the first followup.",
+        "author": "234",
+        "date": "2025-04-07",
+        "replies": [
+          {
+            "text": "This is a reply to the first followup.",
+            "author": "123",
+            "date": "2025-04-12",
+            "helpful": []
+          }
+        ],
+        "resolved": true,
+        "helpful": ["456"]
+      }
+    ]
+  },
+  {
+    "_id": "567",
+    "text": "This is the second question.",
+    "author": "456",
+    "date": "2025-03-31",
+    "type": "QUESTION",
+    "title": "Question 2",
+    "pinned": false,
+    "folder": "HW1",
+    "views": ["123, 234, 345, 456, 567, 678, 789"],
+    "studentAnswer": {
+      "text": "This is the second student answer.",
+      "author": "456",
+      "date": "2025-04-01",
+      "thanks": ["123, 234, 345, 456, 567, 678, 789"]
+    },
+    "goodNotes": ["123, 234, 345, 456, 567, 678"],
+    "followUps": []
+  },
+  {
+    "_id": "678",
+    "text": "This is the third question.",
+    "author": "567",
+    "date": "2025-04-03",
+    "type": "QUESTION",
+    "title": "Question 3",
+    "pinned": false,
+    "folder": "PROJECT",
+    "views": ["123, 234, 345, 456, 567, 678"],
+    "endorser": "678",
+    "instructorAnswer": {
+      "text": "This is the second instructor answer.",
+      "author": "678",
+      "date": "2025-04-04",
+      "endorser": "123",
+      "thanks": ["123, 234, 345"]
+    },
+    "goodNotes": ["123, 234, 345, 456, 567"],
+    "followUps": []
+  },
+  {
+    "_id": "789",
+    "text": "This is the fourth question.",
+    "author": "890",
+    "date": "2025-04-06",
+    "type": "QUESTION",
+    "title": "Question 4",
+    "pinned": false,
+    "folder": "HW2",
+    "views": ["123, 234, 345, 456, 567"],
+    "studentAnswer": {
+      "text": "This is the third student answer.",
+      "author": "567",
+      "date": "2025-04-07",
+      "endorser": "345",
+      "thanks": ["123, 234, 345, 456, 567, 678"]
+    },
+    "instructorAnswer": {
+      "text": "This is the third instructor answer.",
+      "author": "345",
+      "date": "2025-04-08",
+      "thanks": ["123, 234"]
+    },
+    "goodNotes": ["123, 234, 345, 456"],
+    "followUps": []
+  },
+  {
+    "_id": "890",
+    "text": "This is the fifth question.",
+    "author": "234",
+    "date": "2025-04-09",
+    "type": "QUESTION",
+    "title": "Question 5",
+    "pinned": false,
+    "folder": "HW2",
+    "views": ["123, 234, 345, 456"],
+    "endorser": "345",
+    "studentAnswer": {
+      "text": "This is the fourth student answer.",
+      "author": "890",
+      "date": "2025-04-10",
+      "thanks": ["123, 234, 345, 456, 567"]
+    },
+    "goodNotes": ["123, 234, 345"],
+    "followUps": []
+  },
+  {
+    "_id": "901",
+    "text": "This is the sixth question.",
+    "author": "456",
+    "date": "2025-04-12",
+    "type": "QUESTION",
+    "title": "Question 6",
+    "pinned": false,
+    "folder": "HW3",
+    "views": ["123, 234, 345"],
+    "instructorAnswer": {
+      "text": "This is the fourth instructor answer.",
+      "author": "789",
+      "date": "2025-04-13",
+      "endorser": "123",
+      "thanks": ["123"]
+    },
+    "goodNotes": ["123, 234"],
+    "followUps": []
+  },
+  {
+    "_id": "012",
+    "text": "This is the seventh question.",
+    "author": "567",
+    "date": "2025-04-17",
+    "type": "QUESTION",
+    "title": "Question 7",
+    "pinned": false,
+    "folder": "PROJECT",
+    "views": ["123, 234"],
+    "endorser": "123",
+    "goodNotes": ["123"],
+    "followUps": []
+  }
+]

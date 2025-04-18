@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from "react";
 import { makeStyles } from "tss-react/mui";
-import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
+import { PazzaContext } from "../../PazzaProvider/PazzaContext";
 import { getTimeAgo } from "../../utils";
-import { LoginContext } from "../../providers/LoginProvider/LoginContext";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles()({
   contentBox: {
@@ -122,7 +123,7 @@ const useStyles = makeStyles()({
 
 export const InstructorAnswerBox = () => {
   const { classes } = useStyles();
-  const { currentUser } = useContext(LoginContext);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { post } = useContext(PazzaContext);
 
   return (
@@ -149,7 +150,8 @@ export const InstructorAnswerBox = () => {
               <div className={classes.endorserContainer}>
                 <span
                   className={classes.endorser}
-                >{`~ An instructor (${post.endorser?.name}) endorsed this answer ~`}</span>
+                >{`~ An instructor (${post.instructorAnswer.endorser?.firstName}
+                  ${post.instructorAnswer.endorser?.lastName}) endorsed this answer ~`}</span>
               </div>
             )}
           </>
@@ -164,7 +166,8 @@ export const InstructorAnswerBox = () => {
         <>
           <div className={classes.contentDivider} />
           <div className={classes.contentBottom}>
-            {currentUser?.type === "instructor" && (
+            {(currentUser?.role === "FACULTY" ||
+              currentUser?.role === "TA") && (
               <button className={classes.editButton}>Edit</button>
             )}
             <button className={classes.thanksButton}>thanks!</button>
@@ -176,8 +179,8 @@ export const InstructorAnswerBox = () => {
             <span className={classes.answerTime}>{`${
               post?.instructorAnswer
                 ? `Updated ${getTimeAgo(post?.instructorAnswer.date)} by ${
-                    post?.instructorAnswer.author.name
-                  }`
+                    post.instructorAnswer.author.firstName
+                  } ${post.instructorAnswer.author.lastName}`
                 : ""
             }`}</span>
           </div>

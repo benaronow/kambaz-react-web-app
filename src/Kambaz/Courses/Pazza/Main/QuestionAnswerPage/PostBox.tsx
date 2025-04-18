@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from "react";
-import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
+import { PazzaContext } from "../../PazzaProvider/PazzaContext";
 import { makeStyles } from "tss-react/mui";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import { getTimeAgo } from "../../utils";
-import { LoginContext } from "../../providers/LoginProvider/LoginContext";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles()({
   contentBox: {
@@ -147,13 +148,13 @@ const useStyles = makeStyles()({
 
 export const PostBox = () => {
   const { classes } = useStyles();
-  const { currentUser } = useContext(LoginContext);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { post } = useContext(PazzaContext);
 
   return (
     <div className={classes.contentBox}>
       <div className={classes.contentTop}>
-        {post?.type === "question" ? (
+        {post?.type === "QUESTION" ? (
           <div
             className={`${classes.questionBox} ${
               !post?.instructorAnswer &&
@@ -170,28 +171,30 @@ export const PostBox = () => {
             ))}
           </div>
         )}
-        <span
-          className={classes.postName}
-        >{`${post?.type} @${post?._id}`}</span>
+        <span className={classes.postName}>{`${post?.type.toLowerCase()} @${
+          post?._id
+        }`}</span>
       </div>
       <div className={classes.contentDivider} />
       <div className={classes.contentCenter}>
         <span className={classes.postTitle}>{post?.title}</span>
         <span className={classes.postText}>{post?.text}</span>
         <div className={classes.folderContainer}>
-          <span className={classes.folder}>{post?.folder}</span>
+          <span className={classes.folder}>{post?.folder.toLowerCase()}</span>
         </div>
         {post?.endorser && (
           <div className={classes.endorserContainer}>
-            <span
-              className={classes.endorser}
-            >{`~ An instructor (${post?.endorser?.name}) endorsed this answer ~`}</span>
+            <span className={classes.endorser}>{`~ An instructor (${
+              post.endorser?.firstName
+            } ${
+              post.endorser?.lastName
+            }) endorsed this ${post.type.toLowerCase()} ~`}</span>
           </div>
         )}
       </div>
       <div className={classes.contentDivider} />
       <div className={classes.contentBottom}>
-        {currentUser?.type === post?.author.type && (
+        {currentUser?.role === post?.author?.role && (
           <button className={classes.editButton}>Edit</button>
         )}
         <button className={classes.noteButton}>good note</button>
@@ -200,7 +203,9 @@ export const PostBox = () => {
         <div className={classes.noteSpace} />
         <span className={classes.noteTime}>{`${
           post?.date
-            ? `Updated ${getTimeAgo(post.date)} by ${post?.author.name}`
+            ? `Updated ${getTimeAgo(post.date)} by ${post.author.firstName} ${
+                post.author.lastName
+              }`
             : ""
         }`}</span>
       </div>

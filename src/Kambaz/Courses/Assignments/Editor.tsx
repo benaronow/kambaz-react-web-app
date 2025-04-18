@@ -19,10 +19,8 @@ export const AssignmentEditor = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { cid, aid } = useParams();
-  console.log(cid);
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
-  console.log("assigments:", assignments);
   const prevAssigment: Assignment | undefined = aid
     ? assignments?.find((assignment: Assignment) => assignment._id === aid)
     : undefined;

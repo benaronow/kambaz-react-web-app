@@ -26,7 +26,6 @@ export const Courses = ({ courses }: { courses: any[] }) => {
 
     fetchUsers();
   }, [cid]);
-  console.log(courseUsers);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteAssignmentId, setDeleteAssignmentId] = useState("");

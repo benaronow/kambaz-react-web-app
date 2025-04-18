@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { makeStyles } from "tss-react/mui";
-import { getDaysAgo } from "../dateUtils";
-import { Post } from "../pazzaTypes";
+import { getDaysAgo } from "../../dateUtils";
+import { Post } from "../../../../types";
 import { MdArrowRight, MdNoteAdd } from "react-icons/md";
 import { ChangeEvent, ReactNode, useContext, useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -10,15 +11,16 @@ import { BiX } from "react-icons/bi";
 import { RiArrowLeftSFill } from "react-icons/ri";
 import { IoIosSettings, IoMdArrowDropdown } from "react-icons/io";
 import { Tooltip } from "@mui/material";
-import { PazzaContext } from "../providers/PazzaProvider/PazzaContext";
-import { LoginContext } from "../providers/LoginProvider/LoginContext";
+import { PazzaContext } from "../../PazzaProvider/PazzaContext";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles()({
   container: {
     display: "flex",
     flexDirection: "column",
     height: "calc(100vh - 175px)",
-    width: "30%",
+    width: "40%",
+    minWidth: "270px",
     background: "#e9e8ea",
     color: "black",
     borderRight: "solid #cbcacd",
@@ -431,9 +433,16 @@ export const Sidebar = ({
   flipShowSidebar,
 }: SidebarProps) => {
   const { classes } = useStyles();
-  const { currentUser, viewPost } = useContext(LoginContext);
-  const { filter, changeFilter, post, changePost, filteredPosts } =
-    useContext(PazzaContext);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const {
+    post,
+    changePost,
+    asking,
+    toggleAsking,
+    filter,
+    changeFilter,
+    filteredPosts,
+  } = useContext(PazzaContext);
 
   const [overMenuSettings, setOverMenuSettings] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -464,6 +473,15 @@ export const Sidebar = ({
       }
     });
     setWeeks(acc);
+  }, [filteredPosts]);
+
+  const viewPost = (post: Post) => {
+    if (!post.views.find((view) => view === currentUser._id)) {
+      // do summn aboot it
+    }
+  };
+
+  useEffect(() => {
     if (post) viewPost(post);
   }, [post]);
 
@@ -484,28 +502,30 @@ export const Sidebar = ({
 
   const getPostDate = (post: Post) => {
     if (getDaysAgo(post.date) < 2) {
-      return `${post.date.getHours() % 12 || 12}:${
-        post.date.getMinutes() < 10 ? "0" : ""
-      }${post.date.getMinutes()}${post.date.getHours() >= 12 ? " PM" : " AM"}`;
+      return `${new Date(post.date).getHours() % 12 || 12}:${
+        new Date(post.date).getMinutes() < 10 ? "0" : ""
+      }${new Date(post.date).getMinutes()}${
+        new Date(post.date).getHours() >= 12 ? " PM" : " AM"
+      }`;
     } else if (
       getDaysAgo(post.date) >= 2 &&
       getDaysAgo(post.date) < new Date().getDay() + 8
     ) {
-      switch (post.date.getDay()) {
+      switch (new Date(post.date).getDay()) {
         case 0:
-          return "Sunday";
-        case 1:
           return "Monday";
-        case 2:
+        case 1:
           return "Tuesday";
-        case 3:
+        case 2:
           return "Wednesday";
-        case 4:
+        case 3:
           return "Thursday";
-        case 5:
+        case 4:
           return "Friday";
-        case 6:
+        case 5:
           return "Saturday";
+        case 6:
+          return "Sunday";
       }
     } else {
       return `${dayjs(post.date).format("M/DD/YYYY")}`;
@@ -515,10 +535,10 @@ export const Sidebar = ({
   const getPostPreviews = (filteredPosts: Post[]) => {
     const posts: ReactNode[] = [];
     filteredPosts
-      .sort((a, b) => b.date.getTime() - a.date.getTime())
-      .map((fPost, idx) => {
+      ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      ?.map((fPost, idx) => {
         const badges = [];
-        if (fPost.type === "note") {
+        if (fPost.type === "NOTE") {
           badges.push(
             <div className={classes.notePaper}>
               <div className={classes.noteLine} />
@@ -558,29 +578,30 @@ export const Sidebar = ({
                 ? classes.selectedPost
                 : !fPost.studentAnswer &&
                   !fPost.instructorAnswer &&
-                  fPost.type === "question"
+                  fPost.type === "QUESTION"
                 ? classes.unansweredPost
                 : ""
             }`}
-            onMouseEnter={() =>
-              setMouseOverPostField(fPost.title, "show", "on")
-            }
-            onMouseLeave={() =>
-              setMouseOverPostField(fPost.title, "show", "off")
-            }
+            onMouseEnter={() => {
+              setMouseOverPostField(fPost.title, "show", "on");
+            }}
+            onMouseLeave={() => {
+              setMouseOverPostField(fPost.title, "show", "off");
+            }}
             onClick={() => {
               changePost(fPost);
               viewPost(fPost);
+              if (asking) toggleAsking();
             }}
           >
             <div className={classes.postLeft}>
               <div
-                onMouseEnter={() =>
-                  setMouseOverPostField(fPost.title, "over", "on")
-                }
-                onMouseLeave={() =>
-                  setMouseOverPostField(fPost.title, "over", "off")
-                }
+                onMouseEnter={() => {
+                  setMouseOverPostField(fPost.title, "over", "on");
+                }}
+                onMouseLeave={() => {
+                  setMouseOverPostField(fPost.title, "over", "off");
+                }}
               >
                 {mouseOverPost[`${fPost.title}`] &&
                 mouseOverPost[`${fPost.title}`]["open"] ? (
@@ -592,23 +613,24 @@ export const Sidebar = ({
                   mouseOverPost[`${fPost.title}`]["show"] && (
                     <div
                       className={classes.optionsButton}
-                      onClick={() =>
-                        setMouseOverPostField(fPost.title, "open", "on")
-                      }
+                      onClick={() => {
+                        setMouseOverPostField(fPost.title, "open", "on");
+                      }}
                     >
                       <MdArrowRight className={classes.optionsArrow} />
                     </div>
                   )
                 )}
               </div>
-              {!currentUser?.viewedPosts.find(
-                (post) => post._id === fPost._id
+              {!currentUser?.viewedPosts?.find(
+                (post: Post) => post._id === fPost._id
               ) && <div className={classes.unviewedCircle} />}
             </div>
             <div className={classes.postCenter}>
               <div className={classes.postTop}>
                 <div className={classes.postTopRight}>
-                  {fPost.author.type === "instructor" && (
+                  {(fPost.author?.role === "FACULTY" ||
+                    fPost.author?.role === "TA") && (
                     <div className={classes.instructorBadge}>
                       <div className={classes.yellowSquare} />
                       <span>Instr</span>
@@ -632,17 +654,17 @@ export const Sidebar = ({
               </div>
               {fPost.endorser && (
                 <span className={classes.instructorEndorsedText}>
-                  <li>{`An instructor thinks this is a good ${fPost.type}`}</li>
+                  <li>{`An instructor thinks this is a good ${fPost.type.toLowerCase()}`}</li>
                 </span>
               )}
-              {fPost.followUps.filter((followUp) => !followUp.resolved).length >
-                0 && (
+              {fPost.followUps?.filter((followUp) => !followUp.resolved)
+                .length > 0 && (
                 <span className={classes.unresolvedText}>
                   <li>{`${
-                    fPost.followUps.filter((followUp) => !followUp.resolved)
+                    fPost.followUps?.filter((followUp) => !followUp.resolved)
                       .length
                   } Unresolved followup${
-                    fPost.followUps.filter((followUp) => !followUp.resolved)
+                    fPost.followUps?.filter((followUp) => !followUp.resolved)
                       .length > 1
                       ? "s"
                       : ""
@@ -692,7 +714,7 @@ export const Sidebar = ({
         </div>
       </div>
       <div className={classes.newAndSearch}>
-        <button className={classes.newPostButton}>
+        <button className={classes.newPostButton} onClick={toggleAsking}>
           <MdNoteAdd />
           <span className={classes.newPostButtonText}>New Post</span>
         </button>
@@ -715,7 +737,7 @@ export const Sidebar = ({
         <div className={classes.filters}>
           <span>Filtering on:</span>
           <div className={classes.filter} onClick={() => changeFilter("")}>
-            <span className={classes.filterName}>{filter}</span>
+            <span className={classes.filterName}>{filter.toLowerCase()}</span>
             <BiX />
           </div>
         </div>
@@ -806,7 +828,7 @@ export const Sidebar = ({
         )}
       {filteredPosts.filter(
         (post) =>
-          getDaysAgo(post.date) > new Date().getDay() + 1 &&
+          getDaysAgo(post.date) >= new Date().getDay() + 1 &&
           getDaysAgo(post.date) <= new Date().getDay() + 7 &&
           !post.pinned
       ).length > 0 && (
@@ -823,7 +845,7 @@ export const Sidebar = ({
         getPostPreviews(
           filteredPosts.filter(
             (post) =>
-              getDaysAgo(post.date) > new Date().getDay() + 1 &&
+              getDaysAgo(post.date) >= new Date().getDay() + 1 &&
               getDaysAgo(post.date) <= new Date().getDay() + 7 &&
               !post.pinned
           )

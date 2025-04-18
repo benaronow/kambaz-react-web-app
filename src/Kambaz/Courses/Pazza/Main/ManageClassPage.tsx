@@ -10,12 +10,12 @@ const useStyles = makeStyles()({
   },
 });
 
-export const PostPage = () => {
+export const ManageClassPage = () => {
   const { classes } = useStyles();
 
   return (
     <div className={classes.container}>
-      <span>PP</span>
+      <span>MFP</span>
     </div>
   );
 };

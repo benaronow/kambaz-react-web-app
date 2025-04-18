@@ -4,18 +4,18 @@ const useStyles = makeStyles()({
   container: {
     display: "flex",
     height: "calc(100vh - 175px)",
-    width: "70%",
+    width: "100%",
     background: "white",
     color: "black",
   },
 });
 
-export const ManageFoldersPage = () => {
+export const AskQuestionBox = () => {
   const { classes } = useStyles();
 
   return (
     <div className={classes.container}>
-      <span>MFP</span>
+      <span>Post</span>
     </div>
   );
 };

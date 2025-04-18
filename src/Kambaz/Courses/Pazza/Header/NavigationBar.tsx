@@ -1,7 +1,7 @@
-import { useContext } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useParams } from "react-router";
 import { makeStyles } from "tss-react/mui";
-import { LoginContext } from "../providers/LoginProvider/LoginContext";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles()({
   container: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles()({
 export const NavigationBar = () => {
   const { classes } = useStyles();
   const { cid } = useParams();
-  const { currentUser } = useContext(LoginContext);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   return (
     <div className={classes.container}>

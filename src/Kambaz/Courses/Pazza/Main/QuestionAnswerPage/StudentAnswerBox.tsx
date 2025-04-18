@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from "react";
 import { makeStyles } from "tss-react/mui";
-import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
+import { PazzaContext } from "../../PazzaProvider/PazzaContext";
 import { getTimeAgo } from "../../utils";
-import { LoginContext } from "../../providers/LoginProvider/LoginContext";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles()({
   contentBox: {
@@ -122,7 +123,7 @@ const useStyles = makeStyles()({
 
 export const StudentAnswerBox = () => {
   const { classes } = useStyles();
-  const { currentUser } = useContext(LoginContext);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { post } = useContext(PazzaContext);
 
   return (
@@ -149,7 +150,8 @@ export const StudentAnswerBox = () => {
               <div className={classes.endorserContainer}>
                 <span
                   className={classes.endorser}
-                >{`~ An instructor (${post.endorser?.name}) endorsed this answer ~`}</span>
+                >{`~ An instructor (${post.studentAnswer.endorser?.firstName}
+                ${post.studentAnswer.endorser?.lastName}) endorsed this answer ~`}</span>
               </div>
             )}
           </>
@@ -176,8 +178,8 @@ export const StudentAnswerBox = () => {
             <span className={classes.answerTime}>{`${
               post?.studentAnswer
                 ? `Updated ${getTimeAgo(post?.studentAnswer.date)} by ${
-                    post?.studentAnswer.author.name
-                  }`
+                    post.studentAnswer.author.firstName
+                  } ${post.studentAnswer.author.lastName}`
                 : ""
             }`}</span>
           </div>

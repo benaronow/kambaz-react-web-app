@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { FaFolder } from "react-icons/fa6";
 import { makeStyles } from "tss-react/mui";
-import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
-import { FolderType } from "../../pazzaTypes";
+import { PazzaContext } from "../../PazzaProvider/PazzaContext";
+import { FolderType } from "../../../../types";
 
 const useStyles = makeStyles()({
   container: {
@@ -51,16 +51,16 @@ export const FilteredFolders = () => {
   const { changeFilter } = useContext(PazzaContext);
 
   const folders = [
-    "hw2",
-    "hw3",
-    "hw4",
-    "hw5",
-    "hw6",
-    "project",
-    "exam",
-    "logistics",
-    "other",
-    "office_hours",
+    "HW2",
+    "HW3",
+    "HW4",
+    "HW5",
+    "HW6",
+    "PROJECT",
+    "EXAM",
+    "LOGISTICS",
+    "OTHER",
+    "OFFICE_HOURS",
   ];
 
   return (
@@ -84,7 +84,7 @@ export const FilteredFolders = () => {
         <FaFolder className={classes.blueFolder} />
         <span
           className={`${classes.folderTitle} ${classes.firstFolder}`}
-          onClick={() => changeFilter("hw1")}
+          onClick={() => changeFilter("HW1")}
         >
           hw1
         </span>
@@ -94,7 +94,7 @@ export const FilteredFolders = () => {
           className={classes.folderTitle}
           onClick={() => changeFilter(f as FolderType)}
         >
-          {f}
+          {f.toLowerCase()}
         </span>
       ))}
       <div className={classes.edge}></div>

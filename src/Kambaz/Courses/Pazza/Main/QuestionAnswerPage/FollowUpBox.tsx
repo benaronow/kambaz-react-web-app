@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext } from "react";
 import { makeStyles } from "tss-react/mui";
-import { PazzaContext } from "../../providers/PazzaProvider/PazzaContext";
-import { FollowUp, Reply } from "../../pazzaTypes";
+import { PazzaContext } from "../../PazzaProvider/PazzaContext";
+import { FollowUp, Reply } from "../../../../types";
 import { getTimeAgo } from "../../utils";
 
 const useStyles = makeStyles()({
@@ -195,10 +196,13 @@ export const FollowUpBox = () => {
         </div>
         <div className={classes.followUpEntryRight}>
           <div className={classes.followUpInfo}>
-            {reply.author.type === "instructor" && (
+            {(reply.author.role === "FACULTY" ||
+              reply.author.role === "TA") && (
               <div className={classes.instructorBadge}>i</div>
             )}
-            <span className={classes.followUpAuthor}>{reply.author.name}</span>
+            <span className={classes.followUpAuthor}>
+              {`${reply.author.firstName} ${reply.author.lastName}`}
+            </span>
             <span className={classes.followUpDate}>
               {getTimeAgo(reply.date)}
             </span>
@@ -253,11 +257,12 @@ export const FollowUpBox = () => {
           </div>
           <div className={classes.followUpEntryRight}>
             <div className={classes.followUpInfo}>
-              {followUp.author.type === "instructor" && (
+              {(followUp.author.role === "FACULTY" ||
+                followUp.author.role === "TA") && (
                 <div className={classes.instructorBadge}>i</div>
               )}
               <span className={classes.followUpAuthor}>
-                {followUp.author.name}
+                {`${followUp.author.firstName} ${followUp.author.lastName}`}
               </span>
               <span className={classes.followUpDate}>
                 {getTimeAgo(followUp.date)}
@@ -269,7 +274,7 @@ export const FollowUpBox = () => {
               <div className={classes.helpfulDivider} />
               <span className={classes.helpful}>{followUp.helpful.length}</span>
             </div>
-            {followUp.replies.map((reply) => (
+            {followUp.replies?.map((reply) => (
               <ReplyEntry reply={reply} />
             ))}
             <input
