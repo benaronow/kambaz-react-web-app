@@ -109,7 +109,7 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   });
   useEffect(() => {
     const acc: number[] = [];
-    filteredPosts.reverse().forEach((post) => {
+    filteredPosts.forEach((post) => {
       setMouseOverPostField(post.title, "init", "on");
       const weeksAgo = Math.floor(
         (getDaysAgo(post.date) - (new Date().getDay() + 8)) / 7
