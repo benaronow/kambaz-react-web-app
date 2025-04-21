@@ -321,7 +321,11 @@ export const StudentAnswerBox = () => {
                   </button>
                 )}
                 <button className={classes.thanksButton} onClick={voteAnswer}>
-                  thanks!
+                  {`${
+                    post?.studentAnswer?.thanks.includes(currentUser._id)
+                      ? "undo "
+                      : ""
+                  }thanks!`}
                 </button>
                 <div className={classes.thanksDivider} />
                 <span className={classes.thanks}>

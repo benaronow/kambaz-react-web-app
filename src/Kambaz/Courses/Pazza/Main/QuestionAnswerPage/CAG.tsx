@@ -82,27 +82,31 @@ const useStyles = makeStyles()({
 export const CAG = () => {
   const { classes } = useStyles();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { allPosts } = useContext(PazzaContext);
+  const { filteredPosts } = useContext(PazzaContext);
 
   const unreadPosts = useMemo(
     () =>
-      allPosts.reduce(
+      filteredPosts.reduce(
         (acc, cur) => acc + (cur.views.includes(currentUser._id) ? 0 : 1),
         0
       ),
-    [allPosts]
+    [filteredPosts]
   );
   const unansweredQuestions = useMemo(
     () =>
-      allPosts.reduce(
-        (acc, cur) => acc + (cur.instructorAnswer || cur.studentAnswer ? 0 : 1),
+      filteredPosts.reduce(
+        (acc, cur) =>
+          acc +
+          (cur.pType === "NOTE" || cur.instructorAnswer || cur.studentAnswer
+            ? 0
+            : 1),
         0
       ),
-    [allPosts]
+    [filteredPosts]
   );
   const unansweredFollowups = useMemo(
     () =>
-      allPosts.reduce(
+      filteredPosts.reduce(
         (acc, cur) =>
           acc +
           cur.followUps.reduce(
@@ -111,7 +115,7 @@ export const CAG = () => {
           ),
         0
       ),
-    [allPosts]
+    [filteredPosts]
   );
 
   const bigStats = [
@@ -122,24 +126,28 @@ export const CAG = () => {
 
   const instructorsResponses = useMemo(
     () =>
-      allPosts.reduce((acc, cur) => acc + (cur.instructorAnswer ? 1 : 0), 0),
-    [allPosts]
+      filteredPosts.reduce(
+        (acc, cur) => acc + (cur.instructorAnswer ? 1 : 0),
+        0
+      ),
+    [filteredPosts]
   );
 
   const studentsResponses = useMemo(
-    () => allPosts.reduce((acc, cur) => acc + (cur.studentAnswer ? 1 : 0), 0),
-    [allPosts]
+    () =>
+      filteredPosts.reduce((acc, cur) => acc + (cur.studentAnswer ? 1 : 0), 0),
+    [filteredPosts]
   );
 
   const totalFollowupContributions = useMemo(
     () =>
-      allPosts.reduce(
+      filteredPosts.reduce(
         (acc, cur) =>
           acc +
           cur.followUps.reduce((acc, cur) => acc + cur.replies.length + 1, 0),
         0
       ),
-    [allPosts]
+    [filteredPosts]
   );
 
   const smallStats = [
@@ -147,11 +155,11 @@ export const CAG = () => {
       name: "active instructor license",
       value: "license status",
     },
-    { name: "total posts", value: allPosts.length },
+    { name: "total posts", value: filteredPosts.length },
     {
       name: "total contributions",
       value:
-        allPosts.length +
+        filteredPosts.length +
         instructorsResponses +
         studentsResponses +
         totalFollowupContributions,

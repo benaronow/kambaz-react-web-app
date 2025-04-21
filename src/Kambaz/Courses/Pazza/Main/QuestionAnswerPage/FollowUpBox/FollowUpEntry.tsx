@@ -302,7 +302,9 @@ export const FollowUpEntry = ({ followUp, idx }: FollowUpEntryProps) => {
           <span className={classes.followUpText}>{followUp.text}</span>
           <div className={classes.followUpHelpful}>
             <button className={classes.helpfulButton} onClick={voteFollowUp}>
-              helpful!
+              {`${
+                followUp.helpful.includes(currentUser._id) ? "undo " : ""
+              }helpful!`}
             </button>
             <div className={classes.helpfulDivider} />
             <span className={classes.helpful}>{followUp.helpful.length}</span>

@@ -146,7 +146,8 @@ export const ReplyEntry = ({ reply, followUp }: ReplyEntryProps) => {
             ...followUp,
             replies: [
               ...followUp.replies.filter(
-                (r) => !(r.author._id === reply.author._id && r.text === reply.text)
+                (r) =>
+                  !(r.author._id === reply.author._id && r.text === reply.text)
               ),
               {
                 ...reply,
@@ -179,7 +180,9 @@ export const ReplyEntry = ({ reply, followUp }: ReplyEntryProps) => {
         <span className={classes.followUpText}>{reply.text}</span>
         <div className={classes.replyHelpful}>
           <button className={classes.helpfulButton} onClick={voteReply}>
-            helpful!
+            {`${
+              reply.helpful.includes(currentUser._id) ? "undo " : ""
+            }helpful!`}
           </button>
           <div className={classes.helpfulDivider} />
           <span className={classes.helpful}>{reply.helpful.length}</span>

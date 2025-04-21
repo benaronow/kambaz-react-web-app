@@ -465,10 +465,9 @@ export const PostBox = () => {
                 Edit
               </button>
             )}
-            <button
-              className={classes.noteButton}
-              onClick={votePost}
-            >{`good ${post?.pType.toLowerCase()}`}</button>
+            <button className={classes.noteButton} onClick={votePost}>{`${
+              post?.goodNotes.includes(currentUser._id) ? "undo " : ""
+            }good ${post?.pType.toLowerCase()}`}</button>
             <div className={classes.noteDivider} />
             <span className={classes.goodNote}>{post?.goodNotes.length}</span>
             <div className={classes.noteSpace} />
