@@ -121,7 +121,8 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
         });
       }
     });
-    setWeeks(acc.sort());
+    console.log(acc.sort((a, b) => a - b));
+    setWeeks(acc.sort((a, b) => a - b));
   }, [filteredPosts]);
 
   const setMouseOverPostField = (
