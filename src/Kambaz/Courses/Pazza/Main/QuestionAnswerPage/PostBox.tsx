@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { updatePost } from "../../postsClient";
 import { SubmitBox } from "./SubmitBox";
 import { EditPostBox } from "./EditPostBox";
-import { Folder, ForType, Post, PostType, User } from "../../../../types";
+import { Folder, Post, PostType, User } from "../../../../types";
 import { ContentEditableEvent } from "react-simple-wysiwyg";
 
 const useStyles = makeStyles()({
@@ -242,13 +242,12 @@ export const PostBox = () => {
   };
 
   const editPost = useCallback(
-    (e: ChangeEvent<HTMLInputElement>, type: "type" | "for" | "title") => {
+    (e: ChangeEvent<HTMLInputElement>, type: "type" | "title") => {
       if (postEdits) {
         setPostEdits({
           ...postEdits,
           pType:
             type === "type" ? (e.target.value as PostType) : postEdits.pType,
-          for: type === "for" ? (e.target.value as ForType) : postEdits.for,
           title: type === "title" ? e.target.value : postEdits.title,
           author: anonId
             ? allUsers.find((user: User) => user._id === anonId)
@@ -281,6 +280,12 @@ export const PostBox = () => {
           : currentUser,
         date: new Date(),
       });
+    }
+  };
+
+  const editPostFor = (postFor: string[]) => {
+    if (postEdits) {
+      setPostEdits({ ...postEdits, for: postFor });
     }
   };
 
@@ -398,6 +403,7 @@ export const PostBox = () => {
             editPost={editPost}
             editPostText={editPostText}
             editPostFolder={editPostFolder}
+            editPostFor={editPostFor}
             errors={errors}
           />
         ) : (
@@ -455,9 +461,8 @@ export const PostBox = () => {
                 {post?.endorser ? "Unendorse" : "Endorse"}
               </button>
             )}
-            {(post?.author.role === "STUDENT"
-              ? currentUser.role === "STUDENT"
-              : currentUser.role !== "STUDENT") && (
+            {(post?.author._id === currentUser._id ||
+              currentUser.role !== "STUDENT") && (
               <button
                 className={classes.editButton}
                 onClick={() => setEditing(true)}

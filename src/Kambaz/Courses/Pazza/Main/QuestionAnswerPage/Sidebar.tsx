@@ -456,11 +456,12 @@ export const Sidebar = ({
     toggleAsking,
     filter,
     changeFilter,
+    searchText,
+    setSearchText,
     filteredPosts,
   } = useContext(PazzaContext);
 
   const [overMenuSettings, setOverMenuSettings] = useState(false);
-  const [searchText, setSearchText] = useState("");
 
   const viewPost = (post: Post) => {
     if (!post.views.find((view) => view === currentUser._id)) {
@@ -511,6 +512,7 @@ export const Sidebar = ({
   };
 
   const handleSearchTextChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     setSearchText(e.target.value);
   };
 

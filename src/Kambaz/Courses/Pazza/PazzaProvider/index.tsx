@@ -5,6 +5,7 @@ import { PazzaContext } from "./PazzaContext";
 import { findAllPosts, findPostById } from "../postsClient";
 import { useSelector } from "react-redux";
 import { findAllFolders } from "../foldersClient";
+import { useParams } from "react-router";
 
 interface PazzaProviderProps {
   value: {
@@ -39,6 +40,7 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   } = value;
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { cid } = useParams();
 
   const [post, setPost] = useState<Post>();
   const changePost = async (post: Post) => {
@@ -55,6 +57,7 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   const changeFilter = (filter: string) => {
     setFilter(filter);
   };
+  const [searchText, setSearchText] = useState("");
 
   const [allPosts, setAllPosts] = useState<Post[]>([]);
 
@@ -84,16 +87,24 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   }, []);
 
   const filteredPosts = useMemo(() => {
-    return (
-      filter
-        ? allPosts.filter((post) => post.folders.some((f) => f.name === filter))
-        : allPosts
-    ).filter(
+    const sortedByFolder = filter
+      ? allPosts.filter((post) => post.folders.some((f) => f.name === filter))
+      : allPosts;
+    const sortedBySearchText = searchText
+      ? sortedByFolder.filter(
+          (post) =>
+            post.title.includes(searchText) || post.text.includes(searchText)
+        )
+      : sortedByFolder;
+    return sortedBySearchText.filter(
       (post) =>
-        post.for === "ALL" ||
-        (post.for === "INSTRUCTORS" && currentUser.role !== "STUDENT")
+        (post.for.includes("ALL") ||
+          (post.for.includes("INSTRUCTORS") &&
+            currentUser.role !== "STUDENT") ||
+          post.for.includes(currentUser._id)) &&
+        post.course === cid
     );
-  }, [allPosts, filter]);
+  }, [allPosts, filter, searchText]);
 
   const setMouseOverPostField = (
     post: string,
@@ -135,6 +146,8 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
         toggleAsking,
         filter,
         changeFilter,
+        searchText,
+        setSearchText,
         filteredPosts,
         showSidebar,
         flipShowSidebar,

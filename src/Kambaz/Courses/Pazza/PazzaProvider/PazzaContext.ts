@@ -13,6 +13,8 @@ interface PazzaContextType {
   toggleAsking: () => void;
   filter: string;
   changeFilter: (filter: string) => void;
+  searchText: string;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
   filteredPosts: Post[];
   showSidebar: boolean;
   flipShowSidebar: () => void;
@@ -41,6 +43,8 @@ const defaultPazzaContext: PazzaContextType = {
   toggleAsking: () => {},
   filter: "",
   changeFilter: () => {},
+  searchText: "",
+  setSearchText: () => {},
   filteredPosts: [],
   showSidebar: true,
   flipShowSidebar: () => {},

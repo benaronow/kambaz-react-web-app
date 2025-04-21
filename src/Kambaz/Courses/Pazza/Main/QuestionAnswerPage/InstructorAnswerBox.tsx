@@ -292,28 +292,29 @@ export const InstructorAnswerBox = () => {
             ) : (
               <>
                 {currentUser.role !== "STUDENT" && (
-                  <button
-                    className={`${classes.endorseButton} ${
-                      post?.instructorAnswer?.endorser && classes.unendorse
-                    }`}
-                    onClick={endorseInstructorAnswer}
-                  >
-                    {post?.instructorAnswer?.endorser ? "Unendorse" : "Endorse"}
-                  </button>
-                )}
-                {(currentUser?.role === "FACULTY" ||
-                  currentUser?.role === "TA") && (
-                  <button
-                    className={classes.editButton}
-                    onClick={() => {
-                      setEditing(true);
-                      setInstructorAnswerText(
-                        post?.instructorAnswer?.text || ""
-                      );
-                    }}
-                  >
-                    Edit
-                  </button>
+                  <>
+                    <button
+                      className={`${classes.endorseButton} ${
+                        post?.instructorAnswer?.endorser && classes.unendorse
+                      }`}
+                      onClick={endorseInstructorAnswer}
+                    >
+                      {post?.instructorAnswer?.endorser
+                        ? "Unendorse"
+                        : "Endorse"}
+                    </button>
+                    <button
+                      className={classes.editButton}
+                      onClick={() => {
+                        setEditing(true);
+                        setInstructorAnswerText(
+                          post?.instructorAnswer?.text || ""
+                        );
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </>
                 )}
                 <button className={classes.thanksButton} onClick={voteAnswer}>
                   {`${

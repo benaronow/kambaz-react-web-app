@@ -23,12 +23,10 @@ export interface Authorable {
 
 export type PostType = "QUESTION" | "NOTE";
 
-export type ForType = "ALL" | "INSTRUCTORS";
-
 export interface Post extends Authorable {
   _id?: string;
   pType: PostType;
-  for: ForType;
+  for: string[];
   title: string;
   pinned: boolean;
   folders: Folder[];
@@ -38,6 +36,7 @@ export interface Post extends Authorable {
   instructorAnswer?: Answer;
   goodNotes: string[];
   followUps: FollowUp[];
+  course: string;
 }
 
 export interface Answer extends Authorable {

@@ -9,6 +9,7 @@ import { makeStyles } from "tss-react/mui";
 import { ReplyEntry } from "./ReplyEntry";
 import { SubmitBox } from "../SubmitBox";
 import Editor, { ContentEditableEvent } from "react-simple-wysiwyg";
+import { MenuItem, Select } from "@mui/material";
 
 const useStyles = makeStyles()({
   input: {
@@ -41,6 +42,8 @@ const useStyles = makeStyles()({
     fontWeight: 600,
     padding: "4px 5px",
     gap: "5px",
+    height: "30px",
+    alignItems: "center",
   },
   unresolved: {
     background: "#b23633",
@@ -115,12 +118,28 @@ const useStyles = makeStyles()({
     fontSize: "12px",
     fontWeight: 600,
     marginLeft: "3px",
+    whiteSpace: "nowrap",
   },
   contentBottom: {
     display: "flex",
     padding: "6px 0px",
     alignItems: "center",
     borderRadius: "0px 0px 4px 4px",
+  },
+  topSpace: {
+    width: "100%",
+  },
+  dropdown: {
+    height: "30px",
+    transform: "translateX(5px)",
+    borderRadius: "0px 0px 0px 5px",
+    fontSize: "12px",
+    padding: "1px",
+    outline: "none",
+  },
+  dropdownItem: {
+    fontSize: "12px",
+    background: "white",
   },
 });
 
@@ -143,12 +162,66 @@ export const FollowUpEntry = ({ followUp, idx }: FollowUpEntryProps) => {
   const changeAnonId = (set: boolean) => {
     setAnonId(set ? ANON_IDS[Math.floor(Math.random() * 10)] : "");
   };
+  const [editingOld, setEditingOld] = useState(false);
+  const [oldText, setOldText] = useState("");
+  const changeOldText = (e: ContentEditableEvent) => setOldText(e.target.value);
 
   useEffect(() => {
     setEditing(false);
     setNewReplyText("");
+    setEditingOld(false);
+    setOldText("");
     setAnonId("");
   }, [post]);
+
+  const updateFollowup = () => {
+    if (post) {
+      const newFollowup: FollowUp = {
+        ...followUp,
+        text: oldText,
+        author: anonId
+          ? allUsers.find((user: User) => user._id === anonId)
+          : currentUser,
+        date: new Date(),
+      };
+      const newPost = {
+        ...post,
+        followUps: [
+          ...post.followUps.filter(
+            (f) =>
+              !(
+                f.author._id === followUp.author._id && f.text === followUp.text
+              )
+          ),
+          newFollowup,
+        ],
+      };
+
+      updatePost(newPost);
+      setPost(newPost);
+
+      setEditingOld(false);
+    }
+  };
+
+  const deleteFollowup = () => {
+    if (post) {
+      const newPost = {
+        ...post,
+        followUps: [
+          ...post.followUps.filter(
+            (f) =>
+              !(
+                f.author._id === followUp.author._id && f.text === followUp.text
+              )
+          ),
+        ],
+      };
+
+      updatePost(newPost);
+      setPost(newPost);
+    }
+  };
 
   const submitReply = () => {
     if (post) {
@@ -268,7 +341,7 @@ export const FollowUpEntry = ({ followUp, idx }: FollowUpEntryProps) => {
             checked={followUp.resolved}
             onChange={() => resolveFollowUp(true)}
           />
-          <span>Resolved</span>
+          Resolved
           <input
             type="radio"
             name={`${post?._id}_f${idx + 1}unresolved`}
@@ -276,11 +349,30 @@ export const FollowUpEntry = ({ followUp, idx }: FollowUpEntryProps) => {
             checked={!followUp.resolved}
             onChange={() => resolveFollowUp(false)}
           />
-          <span>Unresolved</span>
+          Unresolved
         </div>
         <span className={classes.followUpId}>{`@${post?._id}_f${
           idx + 1
         }`}</span>
+        <div className={classes.topSpace} />
+        <Select
+          className={classes.dropdown}
+          renderValue={() => "Actions"}
+          displayEmpty={true}
+        >
+          <MenuItem
+            className={classes.dropdownItem}
+            onClick={() => {
+              setEditingOld(true);
+              setOldText(followUp.text);
+            }}
+          >
+            Edit
+          </MenuItem>
+          <MenuItem className={classes.dropdownItem} onClick={deleteFollowup}>
+            Delete
+          </MenuItem>
+        </Select>
       </div>
       <div className={classes.followUpEntryLower}>
         <div className={classes.followUpEntryLeft}>
@@ -288,8 +380,7 @@ export const FollowUpEntry = ({ followUp, idx }: FollowUpEntryProps) => {
         </div>
         <div className={classes.followUpEntryRight}>
           <div className={classes.followUpInfo}>
-            {(followUp.author.role === "FACULTY" ||
-              followUp.author.role === "TA") && (
+            {followUp.author.role !== "STUDENT" && (
               <div className={classes.instructorBadge}>i</div>
             )}
             <span className={classes.followUpAuthor}>
@@ -299,16 +390,31 @@ export const FollowUpEntry = ({ followUp, idx }: FollowUpEntryProps) => {
               {getTimeAgo(followUp.date)}
             </span>
           </div>
-          <span className={classes.followUpText}>{followUp.text}</span>
-          <div className={classes.followUpHelpful}>
-            <button className={classes.helpfulButton} onClick={voteFollowUp}>
-              {`${
-                followUp.helpful.includes(currentUser._id) ? "undo " : ""
-              }helpful!`}
-            </button>
-            <div className={classes.helpfulDivider} />
-            <span className={classes.helpful}>{followUp.helpful.length}</span>
-          </div>
+          {editingOld ? (
+            <Editor value={oldText} onChange={changeOldText} />
+          ) : (
+            <span className={classes.followUpText}>{followUp.text}</span>
+          )}
+          {editingOld ? (
+            <div className={classes.contentBottom}>
+              <SubmitBox
+                anonId={anonId}
+                changeAnonId={changeAnonId}
+                onSubmit={updateFollowup}
+                cancel={() => setEditingOld(false)}
+              />
+            </div>
+          ) : (
+            <div className={classes.followUpHelpful}>
+              <button className={classes.helpfulButton} onClick={voteFollowUp}>
+                {`${
+                  followUp.helpful.includes(currentUser._id) ? "undo " : ""
+                }helpful!`}
+              </button>
+              <div className={classes.helpfulDivider} />
+              <span className={classes.helpful}>{followUp.helpful.length}</span>
+            </div>
+          )}
           {followUp.replies?.map((reply, ridx) => (
             <ReplyEntry reply={reply} followUp={followUp} key={ridx} />
           ))}

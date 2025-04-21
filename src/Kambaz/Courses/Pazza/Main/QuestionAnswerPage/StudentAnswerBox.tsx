@@ -309,7 +309,8 @@ export const StudentAnswerBox = () => {
                     {post?.studentAnswer?.endorser ? "Unendorse" : "Endorse"}
                   </button>
                 )}
-                {currentUser?.role === "STUDENT" && (
+                {(post?.author._id === currentUser._id ||
+                  currentUser.role !== "STUDENT") && (
                   <button
                     className={classes.editButton}
                     onClick={() => {

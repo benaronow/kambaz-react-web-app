@@ -236,7 +236,8 @@ export const ManageClassPage = () => {
               onChange={() => selectFolder(folder)}
             />
             <div className={classes.folder}>{folder.name}</div>
-            {editingFolder?.name === folder.name && (
+            <div className={classes.folderRowSpace} />
+            {editingFolder?.name === folder.name ? (
               <>
                 <input
                   className={classes.input}
@@ -257,18 +258,18 @@ export const ManageClassPage = () => {
                   Cancel
                 </button>
               </>
+            ) : (
+              <button
+                className={classes.folderButton}
+                onClick={() => {
+                  setEditingFolder(folder);
+                  setEditedFolderName(folder.name);
+                }}
+                disabled={editingFolder?.name === folder.name}
+              >
+                Edit
+              </button>
             )}
-            <div className={classes.folderRowSpace} />
-            <button
-              className={classes.folderButton}
-              onClick={() => {
-                setEditingFolder(folder);
-                setEditedFolderName(folder.name);
-              }}
-              disabled={editingFolder?.name === folder.name}
-            >
-              Edit
-            </button>
           </div>
         ))}
       </div>

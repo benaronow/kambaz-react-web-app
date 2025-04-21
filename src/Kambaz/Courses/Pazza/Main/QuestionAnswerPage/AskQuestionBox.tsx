@@ -3,12 +3,13 @@ import { makeStyles } from "tss-react/mui";
 import { EditPostBox } from "./EditPostBox";
 import { useSelector } from "react-redux";
 import { ChangeEvent, useContext, useState } from "react";
-import { Folder, ForType, Post, PostType, User } from "../../../../types";
+import { Folder, Post, PostType, User } from "../../../../types";
 import { ANON_IDS } from "../../utils";
 import { SubmitBox } from "./SubmitBox";
 import { createPost, findAllPosts } from "../../postsClient";
 import { PazzaContext } from "../../PazzaProvider/PazzaContext";
 import { ContentEditableEvent } from "react-simple-wysiwyg";
+import { useParams } from "react-router";
 
 const useStyles = makeStyles()({
   container: {
@@ -29,6 +30,8 @@ const useStyles = makeStyles()({
 
 export const AskQuestionBox = () => {
   const { classes } = useStyles();
+  const { cid } = useParams();
+  console.log(cid);
   const { setPost, setAllPosts, toggleAsking } = useContext(PazzaContext);
   const { currentUser, allUsers } = useSelector(
     (state: any) => state.accountReducer
@@ -40,11 +43,12 @@ export const AskQuestionBox = () => {
     pType: "QUESTION",
     title: "",
     pinned: false,
-    views: [],
+    views: [currentUser._id],
     goodNotes: [],
     followUps: [],
-    for: "ALL",
+    for: ["ALL"],
     folders: [],
+    course: "",
   };
   const [postEdits, setPostEdits] = useState(newPost);
   const [anonId, setAnonId] = useState("");
@@ -55,14 +59,13 @@ export const AskQuestionBox = () => {
 
   const editPost = (
     e: ChangeEvent<HTMLInputElement>,
-    type: "type" | "for" | "title"
+    type: "type" | "title"
   ) => {
     if (type === "title" && errors.includes("title"))
       setErrors([...errors.filter((e) => e !== "title")]);
     setPostEdits({
       ...postEdits,
       pType: type === "type" ? (e.target.value as PostType) : postEdits.pType,
-      for: type === "for" ? (e.target.value as ForType) : postEdits.for,
       title: type === "title" ? e.target.value || "" : postEdits?.title,
       author: anonId
         ? allUsers.find((user: User) => user._id === anonId)
@@ -93,6 +96,10 @@ export const AskQuestionBox = () => {
     });
   };
 
+  const editPostFor = (postFor: string[]) => {
+    setPostEdits({ ...postEdits, for: postFor });
+  };
+
   const validatePost = (postEdits: Post) => {
     const errors = [];
     if (postEdits.folders.length === 0) errors.push("folders");
@@ -104,10 +111,7 @@ export const AskQuestionBox = () => {
     if (postEdits) {
       const errors = validatePost(postEdits);
       if (errors.length === 0) {
-        const newPost = await createPost({
-          ...postEdits,
-          views: [currentUser._id],
-        });
+        const newPost = await createPost({ ...postEdits, course: cid || "" });
         toggleAsking();
         setPost(newPost);
         const newAllPosts = await findAllPosts();
@@ -125,6 +129,7 @@ export const AskQuestionBox = () => {
         editPost={editPost}
         editPostText={editPostText}
         editPostFolder={editPostFolder}
+        editPostFor={editPostFor}
         errors={errors}
       />
       <div className={classes.submitContainer}>
