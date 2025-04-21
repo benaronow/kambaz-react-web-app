@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Link, useParams } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 import { makeStyles } from "tss-react/mui";
 import { useSelector } from "react-redux";
 
@@ -30,13 +30,13 @@ const useStyles = makeStyles()({
     alignItems: "center",
     color: "white",
     textDecoration: "none",
-    fontSize: "15px",
-    fontWeight: 900,
+    fontSize: "14px",
+    fontWeight: 600,
     marginRight: "25px",
     whiteSpace: "nowrap",
   },
   activeLink: {
-    textDecoration: "undef",
+    textDecoration: "underline",
   },
   courseLink: {
     marginRight: "55px",
@@ -44,10 +44,11 @@ const useStyles = makeStyles()({
   accountButton: {
     background: "none",
     border: "none",
+    marginRight: "10px",
   },
   accountBox: {
     border: "solid 1px white",
-    marginRight: "5px",
+    marginRight: "8px",
   },
 });
 
@@ -55,6 +56,7 @@ export const NavigationBar = () => {
   const { classes } = useStyles();
   const { cid } = useParams();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const location = useLocation();
 
   return (
     <div className={classes.container}>
@@ -69,15 +71,22 @@ export const NavigationBar = () => {
         </Link>
       </div>
       <div className={classes.right}>
-        <span className={`${classes.link} ${classes.courseLink}`}>CS1234</span>
-        <Link to={`/Kambaz/Courses/${cid}/Pazza`} className={classes.link}>
+        <span className={`${classes.link} ${classes.courseLink}`}>{cid}</span>
+        <Link
+          to={`/Kambaz/Courses/${cid}/Pazza`}
+          className={`${classes.link} ${
+            location.pathname.includes("Home") && classes.activeLink
+          }`}
+        >
           <span>Q & A</span>
         </Link>
         <span className={`${classes.link}`}>Resources</span>
         <span className={`${classes.link}`}>Statistics</span>
         <Link
           to={`/Kambaz/Courses/${cid}/Pazza/ManageClass`}
-          className={classes.link}
+          className={`${classes.link} ${
+            location.pathname.includes("ManageClass") && classes.activeLink
+          }`}
         >
           <span>Manage Class</span>
         </Link>
@@ -88,7 +97,7 @@ export const NavigationBar = () => {
             width={25}
             src={`${currentUser?.profilePic}`}
           />
-          <span>{currentUser?.name}</span>
+          <span>{`${currentUser?.firstName} ${currentUser?.lastName}`}</span>
         </button>
       </div>
     </div>

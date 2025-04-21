@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { makeStyles } from "tss-react/mui";
 import { PazzaContext } from "../../PazzaProvider/PazzaContext";
-import { getTimeAgo } from "../../utils";
+import { ANON_IDS, getTimeAgo } from "../../utils";
 import { useSelector } from "react-redux";
+import { updatePost } from "../../postsClient";
+import { SubmitBox } from "./SubmitBox";
+import { Post, User } from "../../../../types";
+import Editor, { ContentEditableEvent } from "react-simple-wysiwyg";
 
 const useStyles = makeStyles()({
   contentBox: {
@@ -78,6 +82,21 @@ const useStyles = makeStyles()({
     fontSize: "12px",
     marginRight: "6px",
   },
+  endorseButton: {
+    padding: "4px 9px",
+    borderRadius: "3px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    background: "#098943",
+    border: "none",
+    fontSize: "12px",
+    marginRight: "6px",
+  },
+  unendorse: {
+    background: "#b42225",
+  },
   thanksButton: {
     fontSize: "13px",
     color: "#3b74a1",
@@ -123,8 +142,106 @@ const useStyles = makeStyles()({
 
 export const StudentAnswerBox = () => {
   const { classes } = useStyles();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { post } = useContext(PazzaContext);
+  const { currentUser, allUsers } = useSelector(
+    (state: any) => state.accountReducer
+  );
+  const { post, setPost, allPosts, setAllPosts } = useContext(PazzaContext);
+  const [editing, setEditing] = useState(false);
+  const [studentAnswerText, setStudentAnswerText] = useState("");
+  const [anonId, setAnonId] = useState("");
+  const changeAnonId = (set: boolean) => {
+    setAnonId(set ? ANON_IDS[Math.floor(Math.random() * 10)] : "");
+  };
+
+  useEffect(() => {
+    setEditing(false);
+    setStudentAnswerText("");
+    setAnonId("");
+  }, [post]);
+
+  const voteAnswer = async () => {
+    if (post?.studentAnswer) {
+      const votes = post.studentAnswer.thanks.includes(currentUser._id)
+        ? post.studentAnswer.thanks.filter((like) => like !== currentUser._id)
+        : [...post.studentAnswer.thanks, currentUser._id];
+      updatePost({
+        ...post,
+        studentAnswer: { ...post.studentAnswer, thanks: votes },
+      });
+      setPost({
+        ...post,
+        studentAnswer: { ...post.studentAnswer, thanks: votes },
+      });
+    }
+  };
+
+  const editStudentAnswer = (e: ContentEditableEvent) => {
+    setStudentAnswerText(e.target.value);
+  };
+
+  const endorseStudentAnswer = () => {
+    if (post?.studentAnswer) {
+      const newAnswer = {
+        ...post.studentAnswer,
+        endorser: post.studentAnswer.endorser ? undefined : currentUser,
+      };
+
+      const newPost: Post = {
+        ...post,
+        studentAnswer: newAnswer,
+      };
+      setPost(newPost);
+      updatePost(newPost);
+
+      const unPopPost = allPosts.find((p) => p._id === post._id);
+      if (unPopPost) {
+        const newAllPosts = [
+          ...allPosts.filter((p) => p._id !== post._id),
+          {
+            ...unPopPost,
+            studentAnswer: newAnswer,
+          },
+        ];
+
+        setAllPosts(newAllPosts);
+      }
+    }
+  };
+
+  const submitStudentAnswer = () => {
+    const newAnswer = {
+      text: studentAnswerText,
+      author: anonId
+        ? allUsers.find((user: User) => user._id === anonId)
+        : currentUser,
+      date: new Date(),
+      thanks: post?.studentAnswer?.thanks || [],
+    };
+
+    if (post) {
+      const newPost: Post = {
+        ...post,
+        studentAnswer: newAnswer,
+      };
+      updatePost(newPost);
+      setPost(newPost);
+
+      const unPopPost = allPosts.find((p) => p._id === post?._id);
+      if (unPopPost) {
+        const newAllPosts = [
+          ...allPosts.filter((p) => p._id !== post._id),
+          {
+            ...unPopPost,
+            studentAnswer: newAnswer,
+          },
+        ];
+
+        setAllPosts(newAllPosts);
+      }
+    }
+
+    setEditing(false);
+  };
 
   return (
     <div className={classes.contentBox}>
@@ -141,7 +258,7 @@ export const StudentAnswerBox = () => {
       </div>
       <div className={classes.contentDivider} />
       <div className={classes.contentCenter}>
-        {post?.studentAnswer ? (
+        {post?.studentAnswer && !editing ? (
           <>
             <span className={classes.studentAnswer}>
               {post.studentAnswer.text}
@@ -156,32 +273,70 @@ export const StudentAnswerBox = () => {
             )}
           </>
         ) : (
-          <input
-            className={classes.input}
-            placeholder="Click to start off the wiki answer"
-          />
+          <>
+            {editing ? (
+              <Editor value={studentAnswerText} onChange={editStudentAnswer} />
+            ) : (
+              <input
+                className={classes.input}
+                placeholder="Click to start off the wiki answer"
+                onFocus={() => setEditing(true)}
+              />
+            )}
+          </>
         )}
       </div>
-      {post?.studentAnswer && (
+      {(post?.studentAnswer || editing) && (
         <>
           <div className={classes.contentDivider} />
           <div className={classes.contentBottom}>
-            {currentUser?.type === "student" && (
-              <button className={classes.editButton}>Edit</button>
+            {editing ? (
+              <SubmitBox
+                anonId={anonId}
+                changeAnonId={changeAnonId}
+                onSubmit={submitStudentAnswer}
+                cancel={() => setEditing(false)}
+              />
+            ) : (
+              <>
+                {currentUser.role !== "STUDENT" && (
+                  <button
+                    className={`${classes.endorseButton} ${
+                      post?.studentAnswer?.endorser && classes.unendorse
+                    }`}
+                    onClick={endorseStudentAnswer}
+                  >
+                    {post?.studentAnswer?.endorser ? "Unendorse" : "Endorse"}
+                  </button>
+                )}
+                {currentUser?.role === "STUDENT" && (
+                  <button
+                    className={classes.editButton}
+                    onClick={() => {
+                      setEditing(true);
+                      setStudentAnswerText(post?.studentAnswer?.text || "");
+                    }}
+                  >
+                    Edit
+                  </button>
+                )}
+                <button className={classes.thanksButton} onClick={voteAnswer}>
+                  thanks!
+                </button>
+                <div className={classes.thanksDivider} />
+                <span className={classes.thanks}>
+                  {post?.studentAnswer?.thanks.length}
+                </span>
+                <div className={classes.answerSpace} />
+                <span className={classes.answerTime}>{`${
+                  post?.studentAnswer
+                    ? `Updated ${getTimeAgo(post?.studentAnswer.date)} by ${
+                        post.studentAnswer.author.firstName
+                      } ${post.studentAnswer.author.lastName}`
+                    : ""
+                }`}</span>
+              </>
             )}
-            <button className={classes.thanksButton}>thanks!</button>
-            <div className={classes.thanksDivider} />
-            <span className={classes.thanks}>
-              {post?.studentAnswer?.thanks.length}
-            </span>
-            <div className={classes.answerSpace} />
-            <span className={classes.answerTime}>{`${
-              post?.studentAnswer
-                ? `Updated ${getTimeAgo(post?.studentAnswer.date)} by ${
-                    post.studentAnswer.author.firstName
-                  } ${post.studentAnswer.author.lastName}`
-                : ""
-            }`}</span>
           </div>
         </>
       )}

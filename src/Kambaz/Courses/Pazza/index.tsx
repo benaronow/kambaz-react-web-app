@@ -10,6 +10,7 @@ const useStyles = makeStyles()({
     height: "calc(100vh - 100px)",
     overflow: "hidden",
     transform: "translateY(-17px)",
+    minWidth: "760px",
   },
 });
 

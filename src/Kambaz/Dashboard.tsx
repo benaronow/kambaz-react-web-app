@@ -130,9 +130,9 @@ export const Dashboard = () => {
       <hr />
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses.map((course: any, idx: number) => (
+          {courses.map((course: any) => (
             <Col
-              key={idx}
+              key={course._id}
               className="wd-dashboard-course"
               style={{ width: "300px" }}
             >

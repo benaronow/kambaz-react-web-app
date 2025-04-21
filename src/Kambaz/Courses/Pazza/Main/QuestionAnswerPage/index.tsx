@@ -3,7 +3,6 @@ import { makeStyles } from "tss-react/mui";
 import { PostBox } from "./PostBox";
 import { InstructorAnswerBox } from "./InstructorAnswerBox";
 import { StudentAnswerBox } from "./StudentAnswerBox";
-import { FollowUpBox } from "./FollowUpBox";
 import { useContext } from "react";
 import { PazzaContext } from "../../PazzaProvider/PazzaContext";
 import { AskQuestionBox } from "./AskQuestionBox";
@@ -11,6 +10,8 @@ import { Sidebar } from "./Sidebar";
 import { Tooltip } from "@mui/material";
 import { RiArrowRightSFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import { FollowUpBox } from "./FollowUpBox";
+import { CAG } from "./CAG";
 
 const useStyles = makeStyles()({
   container: {
@@ -108,24 +109,26 @@ export const QuestionAnswerPage = () => {
           </div>
         </Tooltip>
       )}
-      {asking ? (
-        <AskQuestionBox />
-      ) : (
-        <div className={classes.questionContainer}>
-          <div className={classes.header} />
-          <div className={classes.contentContainer}>
-            <PostBox />
-            {post?.type === "QUESTION" &&
-              (post.studentAnswer || currentUser?.role === "STUDENT") && (
-                <StudentAnswerBox />
-              )}
-            {post?.type === "QUESTION" &&
-              (post.instructorAnswer ||
-                currentUser?.role === "FACULTY" ||
-                currentUser?.role === "TA") && <InstructorAnswerBox />}
-            <FollowUpBox />
+      {!post && !asking && <CAG />}
+      {asking && <AskQuestionBox />}
+      {post && !asking && (
+        <>
+          <div className={classes.questionContainer}>
+            <div className={classes.header} />
+            <div className={classes.contentContainer}>
+              <PostBox />
+              {post?.pType === "QUESTION" &&
+                (post.studentAnswer || currentUser?.role === "STUDENT") && (
+                  <StudentAnswerBox />
+                )}
+              {post?.pType === "QUESTION" &&
+                (post.instructorAnswer ||
+                  currentUser?.role === "FACULTY" ||
+                  currentUser?.role === "TA") && <InstructorAnswerBox />}
+              <FollowUpBox />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

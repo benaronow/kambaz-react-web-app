@@ -23,12 +23,15 @@ export interface Authorable {
 
 export type PostType = "QUESTION" | "NOTE";
 
+export type ForType = "ALL" | "INSTRUCTORS";
+
 export interface Post extends Authorable {
-  _id: string;
-  type: PostType;
+  _id?: string;
+  pType: PostType;
+  for: ForType;
   title: string;
   pinned: boolean;
-  folder: FolderType;
+  folders: Folder[];
   views: string[];
   endorser?: User;
   studentAnswer?: Answer;
@@ -54,16 +57,8 @@ export interface Reply extends Authorable {
 
 export type PageType = "Q_A" | "MANAGE_CLASSES";
 
-export type FolderType =
-  | "HW1"
-  | "HW2"
-  | "HW3"
-  | "HW4"
-  | "HW5"
-  | "HW6"
-  | "PROJECT"
-  | "EXAME"
-  | "LOGISTICS"
-  | "OTHER"
-  | "OFFICE_HOURS"
-  | "";
+export type Folder = {
+  _id: string;
+  name: string;
+  number: number;
+};

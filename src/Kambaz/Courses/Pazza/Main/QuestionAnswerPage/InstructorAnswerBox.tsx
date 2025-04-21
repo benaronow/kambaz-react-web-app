@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { makeStyles } from "tss-react/mui";
 import { PazzaContext } from "../../PazzaProvider/PazzaContext";
-import { getTimeAgo } from "../../utils";
+import { ANON_IDS, getTimeAgo } from "../../utils";
 import { useSelector } from "react-redux";
+import { updatePost } from "../../postsClient";
+import { Post, User } from "../../../../types";
+import { SubmitBox } from "./SubmitBox";
+import Editor, { ContentEditableEvent } from "react-simple-wysiwyg";
 
 const useStyles = makeStyles()({
   contentBox: {
@@ -78,6 +82,21 @@ const useStyles = makeStyles()({
     fontSize: "12px",
     marginRight: "6px",
   },
+  endorseButton: {
+    padding: "4px 9px",
+    borderRadius: "3px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: "white",
+    background: "#098943",
+    border: "none",
+    fontSize: "12px",
+    marginRight: "6px",
+  },
+  unendorse: {
+    background: "#b42225",
+  },
   thanksButton: {
     fontSize: "13px",
     color: "#3b74a1",
@@ -104,7 +123,7 @@ const useStyles = makeStyles()({
     whiteSpace: "nowrap",
   },
   input: {
-    border: "1px #ced5da",
+    border: "solid 1px #ced5da",
     borderRadius: "5px",
     fontSize: "13px",
     padding: "5px 10px",
@@ -123,8 +142,95 @@ const useStyles = makeStyles()({
 
 export const InstructorAnswerBox = () => {
   const { classes } = useStyles();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { post } = useContext(PazzaContext);
+  const { currentUser, allUsers } = useSelector(
+    (state: any) => state.accountReducer
+  );
+  const { post, setPost, allPosts, setAllPosts } = useContext(PazzaContext);
+  const [editing, setEditing] = useState(false);
+  const [instructorAnswerText, setInstructorAnswerText] = useState("");
+  const [anonId, setAnonId] = useState("");
+  const changeAnonId = (set: boolean) => {
+    setAnonId(set ? ANON_IDS[Math.floor(Math.random() * 10)] : "");
+  };
+
+  useEffect(() => {
+    setEditing(false);
+    setInstructorAnswerText("");
+    setAnonId("");
+  }, [post]);
+
+  const voteAnswer = async () => {
+    if (post?.instructorAnswer) {
+      const votes = post.instructorAnswer.thanks.includes(currentUser._id)
+        ? post.instructorAnswer.thanks.filter(
+            (like) => like !== currentUser._id
+          )
+        : [...post.instructorAnswer.thanks, currentUser._id];
+      updatePost({
+        ...post,
+        instructorAnswer: { ...post.instructorAnswer, thanks: votes },
+      });
+      setPost({
+        ...post,
+        instructorAnswer: { ...post.instructorAnswer, thanks: votes },
+      });
+    }
+  };
+
+  const editInstructorAnswer = (e: ContentEditableEvent) => {
+    setInstructorAnswerText(e.target.value);
+  };
+
+  const endorseInstructorAnswer = () => {
+    if (post?.instructorAnswer) {
+      const newAnswer = {
+        ...post.instructorAnswer,
+        endorser: post.instructorAnswer.endorser ? undefined : currentUser,
+      };
+
+      const newPost: Post = {
+        ...post,
+        instructorAnswer: newAnswer,
+      };
+      setPost(newPost);
+      updatePost(newPost);
+    }
+  };
+
+  const submitInstructorAnswer = () => {
+    const newAnswer = {
+      text: instructorAnswerText,
+      author: anonId
+        ? allUsers.find((user: User) => user._id === anonId)
+        : currentUser,
+      date: new Date(),
+      thanks: post?.instructorAnswer?.thanks || [],
+    };
+
+    if (post) {
+      const newPost: Post = {
+        ...post,
+        instructorAnswer: newAnswer,
+      };
+      updatePost(newPost);
+      setPost(newPost);
+
+      const unPopPost = allPosts.find((p) => p._id === post?._id);
+      if (unPopPost) {
+        const newAllPosts = [
+          ...allPosts.filter((p) => p._id !== post._id),
+          {
+            ...unPopPost,
+            instructorAnswer: newAnswer,
+          },
+        ];
+
+        setAllPosts(newAllPosts);
+      }
+    }
+
+    setEditing(false);
+  };
 
   return (
     <div className={classes.contentBox}>
@@ -141,7 +247,7 @@ export const InstructorAnswerBox = () => {
       </div>
       <div className={classes.contentDivider} />
       <div className={classes.contentCenter}>
-        {post?.instructorAnswer ? (
+        {post?.instructorAnswer && !editing ? (
           <>
             <span className={classes.instructorAnswer}>
               {post?.instructorAnswer?.text}
@@ -156,33 +262,76 @@ export const InstructorAnswerBox = () => {
             )}
           </>
         ) : (
-          <input
-            className={classes.input}
-            placeholder="Click to start off the wiki answer"
-          />
+          <>
+            {editing ? (
+              <Editor
+                value={instructorAnswerText}
+                onChange={editInstructorAnswer}
+              />
+            ) : (
+              <input
+                className={classes.input}
+                placeholder="Click to start off the wiki answer"
+                onFocus={() => setEditing(true)}
+              />
+            )}
+          </>
         )}
       </div>
-      {post?.instructorAnswer && (
+      {(post?.instructorAnswer || editing) && (
         <>
           <div className={classes.contentDivider} />
           <div className={classes.contentBottom}>
-            {(currentUser?.role === "FACULTY" ||
-              currentUser?.role === "TA") && (
-              <button className={classes.editButton}>Edit</button>
+            {editing ? (
+              <SubmitBox
+                anonId={anonId}
+                changeAnonId={changeAnonId}
+                onSubmit={submitInstructorAnswer}
+                cancel={() => setEditing(false)}
+              />
+            ) : (
+              <>
+                {currentUser.role !== "STUDENT" && (
+                  <button
+                    className={`${classes.endorseButton} ${
+                      post?.instructorAnswer?.endorser && classes.unendorse
+                    }`}
+                    onClick={endorseInstructorAnswer}
+                  >
+                    {post?.instructorAnswer?.endorser ? "Unendorse" : "Endorse"}
+                  </button>
+                )}
+                {(currentUser?.role === "FACULTY" ||
+                  currentUser?.role === "TA") && (
+                  <button
+                    className={classes.editButton}
+                    onClick={() => {
+                      setEditing(true);
+                      setInstructorAnswerText(
+                        post?.instructorAnswer?.text || ""
+                      );
+                    }}
+                  >
+                    Edit
+                  </button>
+                )}
+                <button className={classes.thanksButton} onClick={voteAnswer}>
+                  thanks!
+                </button>
+                <div className={classes.thanksDivider} />
+                <span className={classes.thanks}>
+                  {post?.instructorAnswer?.thanks.length}
+                </span>
+                <div className={classes.answerSpace} />
+                <span className={classes.answerTime}>{`${
+                  post?.instructorAnswer
+                    ? `Updated ${getTimeAgo(post?.instructorAnswer.date)} by ${
+                        post.instructorAnswer.author.firstName
+                      } ${post.instructorAnswer.author.lastName}`
+                    : ""
+                }`}</span>
+              </>
             )}
-            <button className={classes.thanksButton}>thanks!</button>
-            <div className={classes.thanksDivider} />
-            <span className={classes.thanks}>
-              {post?.instructorAnswer?.thanks.length}
-            </span>
-            <div className={classes.answerSpace} />
-            <span className={classes.answerTime}>{`${
-              post?.instructorAnswer
-                ? `Updated ${getTimeAgo(post?.instructorAnswer.date)} by ${
-                    post.instructorAnswer.author.firstName
-                  } ${post.instructorAnswer.author.lastName}`
-                : ""
-            }`}</span>
           </div>
         </>
       )}

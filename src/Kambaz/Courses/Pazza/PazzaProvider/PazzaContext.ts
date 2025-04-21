@@ -1,14 +1,18 @@
 import { createContext } from "react";
-import { FolderType, Post } from "../../../types";
+import { Folder, Post } from "../../../types";
 
 interface PazzaContextType {
   post: Post | undefined;
+  setPost: React.Dispatch<React.SetStateAction<Post | undefined>>;
   allPosts: Post[];
+  setAllPosts: React.Dispatch<React.SetStateAction<Post[]>>;
   changePost: (post: Post) => void;
+  sortedFolders: Folder[];
+  setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
   asking: boolean;
   toggleAsking: () => void;
-  filter: FolderType;
-  changeFilter: (filter: FolderType) => void;
+  filter: string;
+  changeFilter: (filter: string) => void;
   filteredPosts: Post[];
   showSidebar: boolean;
   flipShowSidebar: () => void;
@@ -27,8 +31,12 @@ interface PazzaContextType {
 
 const defaultPazzaContext: PazzaContextType = {
   post: undefined,
+  setPost: () => {},
   allPosts: [],
+  setAllPosts: () => {},
   changePost: () => {},
+  sortedFolders: [],
+  setFolders: () => {},
   asking: false,
   toggleAsking: () => {},
   filter: "",

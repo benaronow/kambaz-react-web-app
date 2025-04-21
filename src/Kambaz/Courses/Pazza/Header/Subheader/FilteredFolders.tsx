@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { FaFolder } from "react-icons/fa6";
 import { makeStyles } from "tss-react/mui";
 import { PazzaContext } from "../../PazzaProvider/PazzaContext";
-import { FolderType } from "../../../../types";
 
 const useStyles = makeStyles()({
   container: {
@@ -48,20 +47,7 @@ const useStyles = makeStyles()({
 
 export const FilteredFolders = () => {
   const { classes } = useStyles();
-  const { changeFilter } = useContext(PazzaContext);
-
-  const folders = [
-    "HW2",
-    "HW3",
-    "HW4",
-    "HW5",
-    "HW6",
-    "PROJECT",
-    "EXAM",
-    "LOGISTICS",
-    "OTHER",
-    "OFFICE_HOURS",
-  ];
+  const { sortedFolders, changeFilter } = useContext(PazzaContext);
 
   return (
     <div className={classes.container}>
@@ -80,22 +66,28 @@ export const FilteredFolders = () => {
         </span>
       </div>
       <div className={classes.vDivider}></div>
-      <div className={classes.folderAndTitle}>
-        <FaFolder className={classes.blueFolder} />
-        <span
-          className={`${classes.folderTitle} ${classes.firstFolder}`}
-          onClick={() => changeFilter("HW1")}
-        >
-          hw1
-        </span>
-      </div>
-      {folders.map((f) => (
-        <span
-          className={classes.folderTitle}
-          onClick={() => changeFilter(f as FolderType)}
-        >
-          {f.toLowerCase()}
-        </span>
+      {sortedFolders.map((f, idx) => (
+        <>
+          {idx === 0 ? (
+            <div className={classes.folderAndTitle}>
+              <FaFolder className={classes.blueFolder} />
+              <span
+                className={`${classes.folderTitle} ${classes.firstFolder}`}
+                onClick={() => changeFilter(f.name)}
+              >
+                {f.name}
+              </span>
+            </div>
+          ) : (
+            <span
+              key={idx}
+              className={classes.folderTitle}
+              onClick={() => changeFilter(f.name)}
+            >
+              {f.name}
+            </span>
+          )}
+        </>
       ))}
       <div className={classes.edge}></div>
     </div>

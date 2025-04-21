@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { makeStyles } from "tss-react/mui";
-import { getDaysAgo } from "../../dateUtils";
+import { DAY_NAMES, getDaysAgo } from "../../utils";
 import { Post } from "../../../../types";
 import { MdArrowRight, MdNoteAdd } from "react-icons/md";
 import { ChangeEvent, ReactNode, useContext, useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { IoIosSettings, IoMdArrowDropdown } from "react-icons/io";
 import { Tooltip } from "@mui/material";
 import { PazzaContext } from "../../PazzaProvider/PazzaContext";
 import { useSelector } from "react-redux";
+import { updatePost } from "../../postsClient";
 
 const useStyles = makeStyles()({
   container: {
@@ -246,18 +247,22 @@ const useStyles = makeStyles()({
   postCenter: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
+    width: "calc(100% - 20px)",
     padding: "5px 0px 5px 0px",
   },
   postTop: {
     display: "flex",
     height: "22px",
     alignItems: "flex-start",
+    width: "100%",
+    maxWidth: "100%",
+    paddingRight: "5px",
   },
   postTopRight: {
     display: "flex",
     alignItems: "center",
-    width: "70%",
+    width: "100%",
+    overflow: "hidden",
   },
   instructorBadge: {
     display: "flex",
@@ -281,19 +286,23 @@ const useStyles = makeStyles()({
   postTitle: {
     fontSize: "12px",
     fontWeight: 600,
+    maxWidth: "100%",
+    overflow: "hidden",
     textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   },
   postTopLeft: {
     display: "flex",
-    width: "30%",
+    width: "50px",
+    minWidth: "50px",
     justifyContent: "flex-end",
     alignItems: "center",
+    marginLeft: "5px",
   },
   postTime: {
     fontSize: "12px",
     color: "gray",
     whiteSpace: "nowrap",
-    marginRight: "5px",
   },
   postBottom: {
     display: "flex",
@@ -312,6 +321,9 @@ const useStyles = makeStyles()({
   },
   postText: {
     marginTop: "-2px",
+    maxHeight: "55px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   notePaper: {
     display: "flex",
@@ -436,7 +448,10 @@ export const Sidebar = ({
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const {
     post,
+    setPost,
     changePost,
+    allPosts,
+    setAllPosts,
     asking,
     toggleAsking,
     filter,
@@ -472,12 +487,15 @@ export const Sidebar = ({
         });
       }
     });
-    setWeeks(acc);
+    setWeeks(acc.sort());
   }, [filteredPosts]);
 
   const viewPost = (post: Post) => {
     if (!post.views.find((view) => view === currentUser._id)) {
-      // do summn aboot it
+      const newPost = { ...post, views: [...post.views, currentUser._id] };
+      updatePost(newPost);
+      setPost(newPost);
+      setAllPosts([...allPosts.filter((p) => p._id !== post._id), newPost]);
     }
   };
 
@@ -511,22 +529,7 @@ export const Sidebar = ({
       getDaysAgo(post.date) >= 2 &&
       getDaysAgo(post.date) < new Date().getDay() + 8
     ) {
-      switch (new Date(post.date).getDay()) {
-        case 0:
-          return "Monday";
-        case 1:
-          return "Tuesday";
-        case 2:
-          return "Wednesday";
-        case 3:
-          return "Thursday";
-        case 4:
-          return "Friday";
-        case 5:
-          return "Saturday";
-        case 6:
-          return "Sunday";
-      }
+      return DAY_NAMES[new Date(post.date).getDay()];
     } else {
       return `${dayjs(post.date).format("M/DD/YYYY")}`;
     }
@@ -538,7 +541,7 @@ export const Sidebar = ({
       ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       ?.map((fPost, idx) => {
         const badges = [];
-        if (fPost.type === "NOTE") {
+        if (fPost.pType === "NOTE") {
           badges.push(
             <div className={classes.notePaper}>
               <div className={classes.noteLine} />
@@ -574,11 +577,11 @@ export const Sidebar = ({
           <div
             key={idx}
             className={`${classes.post} ${
-              post?.title === fPost.title
+              post?._id === fPost._id
                 ? classes.selectedPost
                 : !fPost.studentAnswer &&
                   !fPost.instructorAnswer &&
-                  fPost.type === "QUESTION"
+                  fPost.pType === "QUESTION"
                 ? classes.unansweredPost
                 : ""
             }`}
@@ -622,9 +625,9 @@ export const Sidebar = ({
                   )
                 )}
               </div>
-              {!currentUser?.viewedPosts?.find(
-                (post: Post) => post._id === fPost._id
-              ) && <div className={classes.unviewedCircle} />}
+              {!fPost.views.find((view) => view === currentUser._id) && (
+                <div className={classes.unviewedCircle} />
+              )}
             </div>
             <div className={classes.postCenter}>
               <div className={classes.postTop}>
@@ -644,7 +647,11 @@ export const Sidebar = ({
               </div>
               <div className={classes.postBottom}>
                 <div className={classes.postBottomRight}>
-                  <span className={classes.postText}>{fPost.text}</span>
+                  <div
+                    className={classes.postText}
+                    dangerouslySetInnerHTML={{ __html: fPost.text || "" }}
+                    style={{ marginBottom: "0px" }}
+                  />
                 </div>
                 <div className={classes.postBottomLeft}>
                   {badges.map((badge, idx) => (
@@ -654,7 +661,7 @@ export const Sidebar = ({
               </div>
               {fPost.endorser && (
                 <span className={classes.instructorEndorsedText}>
-                  <li>{`An instructor thinks this is a good ${fPost.type.toLowerCase()}`}</li>
+                  <li>{`An instructor thinks this is a good ${fPost.pType.toLowerCase()}`}</li>
                 </span>
               )}
               {fPost.followUps?.filter((followUp) => !followUp.resolved)
