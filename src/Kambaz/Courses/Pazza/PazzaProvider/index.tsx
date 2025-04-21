@@ -86,12 +86,7 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   const filteredPosts = useMemo(() => {
     return (
       filter
-        ? allPosts.filter((post) =>
-            post.folders.some((f) => {
-              console.log(f.name);
-              return f.name === filter;
-            })
-          )
+        ? allPosts.filter((post) => post.folders.some((f) => f.name === filter))
         : allPosts
     ).filter(
       (post) =>

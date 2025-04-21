@@ -478,7 +478,6 @@ export const Sidebar = ({
   });
 
   useEffect(() => {
-    console.log("useEffect");
     const acc: number[] = [];
     [...filteredPosts].reverse().forEach((post) => {
       setMouseOverPostField(post.title, "init", "on");
@@ -512,7 +511,6 @@ export const Sidebar = ({
   }, [post]);
 
   const flipDropdown = (dropdown: number) => {
-    console.log('flipDropdown')
     setDropdowns((prev) => {
       return { ...prev, [`${dropdown}`]: !prev[`${dropdown}`] };
     });
@@ -597,12 +595,12 @@ export const Sidebar = ({
                   ? classes.unansweredPost
                   : ""
               }`}
-              onMouseEnter={() => {
-                setMouseOverPostField(fPost.title, "show", "on");
-              }}
-              onMouseLeave={() => {
-                setMouseOverPostField(fPost.title, "show", "off");
-              }}
+              // onMouseEnter={() => {
+              //   setMouseOverPostField(fPost.title, "show", "on");
+              // }}
+              // onMouseLeave={() => {
+              //   setMouseOverPostField(fPost.title, "show", "off");
+              // }}
               onClick={() => {
                 changePost(fPost);
                 viewPost(fPost);
