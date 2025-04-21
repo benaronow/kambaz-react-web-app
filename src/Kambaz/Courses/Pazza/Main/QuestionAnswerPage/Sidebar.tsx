@@ -478,6 +478,7 @@ export const Sidebar = ({
   });
 
   useEffect(() => {
+    console.log("useEffect");
     const acc: number[] = [];
     [...filteredPosts].reverse().forEach((post) => {
       setMouseOverPostField(post.title, "init", "on");
@@ -511,6 +512,7 @@ export const Sidebar = ({
   }, [post]);
 
   const flipDropdown = (dropdown: number) => {
+    console.log('flipDropdown')
     setDropdowns((prev) => {
       return { ...prev, [`${dropdown}`]: !prev[`${dropdown}`] };
     });
