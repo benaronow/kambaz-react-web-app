@@ -5,7 +5,6 @@ import { PazzaContext } from "./PazzaContext";
 import { findAllPosts, findPostById } from "../postsClient";
 import { useSelector } from "react-redux";
 import { findAllFolders } from "../foldersClient";
-import { getDaysAgo } from "../utils";
 
 interface PazzaProviderProps {
   value: {
@@ -96,35 +95,6 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
     );
   }, [allPosts, filter]);
 
-  const [weeks, setWeeks] = useState<number[]>([]);
-
-  const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
-    "0": true,
-    "1": true,
-    "2": true,
-    "3": true,
-    "4": true,
-  });
-  useEffect(() => {
-    const acc: number[] = [];
-    filteredPosts.forEach((post) => {
-      setMouseOverPostField(post.title, "init", "on");
-      const weeksAgo = Math.floor(
-        (getDaysAgo(post.date) - (new Date().getDay() + 8)) / 7
-      );
-      if (weeksAgo >= 0 && !acc.includes(weeksAgo) && !post.pinned) {
-        acc.push(weeksAgo);
-        setDropdowns((prev) => {
-          return {
-            ...prev,
-            [`${5 + weeksAgo}`]: weeksAgo === 0,
-          };
-        });
-      }
-    });
-    setWeeks(acc.sort((a, b) => a - b));
-  }, [filteredPosts]);
-
   const setMouseOverPostField = (
     post: string,
     type: "init" | "show" | "over" | "open",
@@ -161,9 +131,6 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
         changePost,
         sortedFolders,
         setFolders,
-        weeks,
-        dropdowns,
-        setDropdowns,
         asking,
         toggleAsking,
         filter,

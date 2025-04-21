@@ -9,13 +9,6 @@ interface PazzaContextType {
   changePost: (post: Post) => void;
   sortedFolders: Folder[];
   setFolders: React.Dispatch<React.SetStateAction<Folder[]>>;
-  weeks: number[];
-  dropdowns: { [key: string]: boolean };
-  setDropdowns: React.Dispatch<
-    React.SetStateAction<{
-      [key: string]: boolean;
-    }>
-  >;
   asking: boolean;
   toggleAsking: () => void;
   filter: string;
@@ -44,9 +37,6 @@ const defaultPazzaContext: PazzaContextType = {
   changePost: () => {},
   sortedFolders: [],
   setFolders: () => {},
-  weeks: [],
-  dropdowns: {},
-  setDropdowns: () => {},
   asking: false,
   toggleAsking: () => {},
   filter: "",
