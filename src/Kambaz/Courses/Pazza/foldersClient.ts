@@ -5,7 +5,6 @@ export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER;
 export const FOLDERS_API = `${REMOTE_SERVER}/api/pazzaFolders`;
 
 export const createFolder = async (name: string) => {
-  console.log(name);
   const response = await axios.post(`${FOLDERS_API}`, { name });
   return response.data;
 };

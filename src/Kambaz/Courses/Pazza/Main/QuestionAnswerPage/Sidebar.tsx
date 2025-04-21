@@ -459,6 +459,9 @@ export const Sidebar = ({
     changePost,
     allPosts,
     setAllPosts,
+    weeks,
+    dropdowns,
+    setDropdowns,
     asking,
     toggleAsking,
     filter,
@@ -468,34 +471,6 @@ export const Sidebar = ({
 
   const [overMenuSettings, setOverMenuSettings] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [weeks, setWeeks] = useState<number[]>([]);
-  const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
-    "0": true,
-    "1": true,
-    "2": true,
-    "3": true,
-    "4": true,
-  });
-
-  useEffect(() => {
-    const acc: number[] = [];
-    [...filteredPosts].reverse().forEach((post) => {
-      setMouseOverPostField(post.title, "init", "on");
-      const weeksAgo = Math.floor(
-        (getDaysAgo(post.date) - (new Date().getDay() + 8)) / 7
-      );
-      if (weeksAgo >= 0 && !acc.includes(weeksAgo) && !post.pinned) {
-        acc.push(weeksAgo);
-        setDropdowns((prev) => {
-          return {
-            ...prev,
-            [`${5 + weeksAgo}`]: weeksAgo === 0,
-          };
-        });
-      }
-    });
-    setWeeks(acc.sort());
-  }, [filteredPosts]);
 
   const viewPost = (post: Post) => {
     if (!post.views.find((view) => view === currentUser._id)) {
@@ -595,12 +570,12 @@ export const Sidebar = ({
                   ? classes.unansweredPost
                   : ""
               }`}
-              // onMouseEnter={() => {
-              //   setMouseOverPostField(fPost.title, "show", "on");
-              // }}
-              // onMouseLeave={() => {
-              //   setMouseOverPostField(fPost.title, "show", "off");
-              // }}
+              onMouseEnter={() => {
+                setMouseOverPostField(fPost.title, "show", "on");
+              }}
+              onMouseLeave={() => {
+                setMouseOverPostField(fPost.title, "show", "off");
+              }}
               onClick={() => {
                 changePost(fPost);
                 viewPost(fPost);
