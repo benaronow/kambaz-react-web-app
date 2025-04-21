@@ -3,7 +3,14 @@ import { makeStyles } from "tss-react/mui";
 import { DAY_NAMES, getDaysAgo } from "../../utils";
 import { Post } from "../../../../types";
 import { MdArrowRight, MdNoteAdd } from "react-icons/md";
-import { ChangeEvent, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import dayjs from "dayjs";
 import { ImCheckmark } from "react-icons/im";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -535,155 +542,162 @@ export const Sidebar = ({
     }
   };
 
-  const getPostPreviews = (filteredPosts: Post[]) => {
-    const posts: ReactNode[] = [];
-    filteredPosts
-      ?.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      ?.map((fPost, idx) => {
-        const badges = [];
-        if (fPost.pType === "NOTE") {
-          badges.push(
-            <div className={classes.notePaper}>
-              <div className={classes.noteLine} />
-              <div className={classes.noteLine} />
-              <div className={classes.noteLine} />
-              <div className={classes.noteLine} />
-            </div>
-          );
-        }
-        if (fPost.studentAnswer) {
-          badges.push(
-            <div
-              className={`${classes.answerBadge} ${classes.studentAnswerBadge}`}
-            >
-              <span>s</span>
-              {fPost.studentAnswer.endorser && (
-                <ImCheckmark className={classes.ieCheckmark} />
-              )}
-            </div>
-          );
-        }
-        if (fPost.instructorAnswer) {
-          badges.push(
-            <div
-              className={`${classes.answerBadge} ${classes.instructorAnswerBadge}`}
-            >
-              <span>i</span>
-            </div>
-          );
-        }
-
-        posts.push(
-          <div
-            key={idx}
-            className={`${classes.post} ${
-              post?._id === fPost._id
-                ? classes.selectedPost
-                : !fPost.studentAnswer &&
-                  !fPost.instructorAnswer &&
-                  fPost.pType === "QUESTION"
-                ? classes.unansweredPost
-                : ""
-            }`}
-            onMouseEnter={() => {
-              setMouseOverPostField(fPost.title, "show", "on");
-            }}
-            onMouseLeave={() => {
-              setMouseOverPostField(fPost.title, "show", "off");
-            }}
-            onClick={() => {
-              changePost(fPost);
-              viewPost(fPost);
-              if (asking) toggleAsking();
-            }}
-          >
-            <div className={classes.postLeft}>
+  const getPostPreviews = useCallback(
+    (filteredPosts: Post[]) => {
+      const posts: ReactNode[] = [];
+      filteredPosts
+        ?.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        )
+        ?.map((fPost, idx) => {
+          const badges = [];
+          if (fPost.pType === "NOTE") {
+            badges.push(
+              <div className={classes.notePaper}>
+                <div className={classes.noteLine} />
+                <div className={classes.noteLine} />
+                <div className={classes.noteLine} />
+                <div className={classes.noteLine} />
+              </div>
+            );
+          }
+          if (fPost.studentAnswer) {
+            badges.push(
               <div
-                onMouseEnter={() => {
-                  setMouseOverPostField(fPost.title, "over", "on");
-                }}
-                onMouseLeave={() => {
-                  setMouseOverPostField(fPost.title, "over", "off");
-                }}
+                className={`${classes.answerBadge} ${classes.studentAnswerBadge}`}
               >
-                {mouseOverPost[`${fPost.title}`] &&
-                mouseOverPost[`${fPost.title}`]["open"] ? (
-                  <div className={classes.openOptionsButton}>
-                    <MdArrowRight className={classes.optionsArrow} />
-                  </div>
-                ) : (
-                  mouseOverPost[`${fPost.title}`] &&
-                  mouseOverPost[`${fPost.title}`]["show"] && (
-                    <div
-                      className={classes.optionsButton}
-                      onClick={() => {
-                        setMouseOverPostField(fPost.title, "open", "on");
-                      }}
-                    >
-                      <MdArrowRight className={classes.optionsArrow} />
-                    </div>
-                  )
+                <span>s</span>
+                {fPost.studentAnswer.endorser && (
+                  <ImCheckmark className={classes.ieCheckmark} />
                 )}
               </div>
-              {!fPost.views.find((view) => view === currentUser._id) && (
-                <div className={classes.unviewedCircle} />
-              )}
-            </div>
-            <div className={classes.postCenter}>
-              <div className={classes.postTop}>
-                <div className={classes.postTopRight}>
-                  {(fPost.author?.role === "FACULTY" ||
-                    fPost.author?.role === "TA") && (
-                    <div className={classes.instructorBadge}>
-                      <div className={classes.yellowSquare} />
-                      <span>Instr</span>
+            );
+          }
+          if (fPost.instructorAnswer) {
+            badges.push(
+              <div
+                className={`${classes.answerBadge} ${classes.instructorAnswerBadge}`}
+              >
+                <span>i</span>
+              </div>
+            );
+          }
+
+          posts.push(
+            <div
+              key={idx}
+              className={`${classes.post} ${
+                post?._id === fPost._id
+                  ? classes.selectedPost
+                  : !fPost.studentAnswer &&
+                    !fPost.instructorAnswer &&
+                    fPost.pType === "QUESTION"
+                  ? classes.unansweredPost
+                  : ""
+              }`}
+              onMouseEnter={() => {
+                setMouseOverPostField(fPost.title, "show", "on");
+              }}
+              onMouseLeave={() => {
+                setMouseOverPostField(fPost.title, "show", "off");
+              }}
+              onClick={() => {
+                changePost(fPost);
+                viewPost(fPost);
+                if (asking) toggleAsking();
+              }}
+            >
+              <div className={classes.postLeft}>
+                <div
+                  onMouseEnter={() => {
+                    setMouseOverPostField(fPost.title, "over", "on");
+                  }}
+                  onMouseLeave={() => {
+                    setMouseOverPostField(fPost.title, "over", "off");
+                  }}
+                >
+                  {mouseOverPost[`${fPost.title}`] &&
+                  mouseOverPost[`${fPost.title}`]["open"] ? (
+                    <div className={classes.openOptionsButton}>
+                      <MdArrowRight className={classes.optionsArrow} />
                     </div>
+                  ) : (
+                    mouseOverPost[`${fPost.title}`] &&
+                    mouseOverPost[`${fPost.title}`]["show"] && (
+                      <div
+                        className={classes.optionsButton}
+                        onClick={() => {
+                          setMouseOverPostField(fPost.title, "open", "on");
+                        }}
+                      >
+                        <MdArrowRight className={classes.optionsArrow} />
+                      </div>
+                    )
                   )}
-                  <span className={classes.postTitle}>{fPost.title}</span>
                 </div>
-                <div className={classes.postTopLeft}>
-                  <span className={classes.postTime}>{getPostDate(fPost)}</span>
-                </div>
+                {!fPost.views.find((view) => view === currentUser._id) && (
+                  <div className={classes.unviewedCircle} />
+                )}
               </div>
-              <div className={classes.postBottom}>
-                <div className={classes.postBottomRight}>
-                  <div
-                    className={classes.postText}
-                    dangerouslySetInnerHTML={{ __html: fPost.text || "" }}
-                    style={{ marginBottom: "0px" }}
-                  />
+              <div className={classes.postCenter}>
+                <div className={classes.postTop}>
+                  <div className={classes.postTopRight}>
+                    {(fPost.author?.role === "FACULTY" ||
+                      fPost.author?.role === "TA") && (
+                      <div className={classes.instructorBadge}>
+                        <div className={classes.yellowSquare} />
+                        <span>Instr</span>
+                      </div>
+                    )}
+                    <span className={classes.postTitle}>{fPost.title}</span>
+                  </div>
+                  <div className={classes.postTopLeft}>
+                    <span className={classes.postTime}>
+                      {getPostDate(fPost)}
+                    </span>
+                  </div>
                 </div>
-                <div className={classes.postBottomLeft}>
-                  {badges.map((badge, idx) => (
-                    <div key={idx}>{badge}</div>
-                  ))}
+                <div className={classes.postBottom}>
+                  <div className={classes.postBottomRight}>
+                    <div
+                      className={classes.postText}
+                      dangerouslySetInnerHTML={{ __html: fPost.text || "" }}
+                      style={{ marginBottom: "0px" }}
+                    />
+                  </div>
+                  <div className={classes.postBottomLeft}>
+                    {badges.map((badge, idx) => (
+                      <div key={idx}>{badge}</div>
+                    ))}
+                  </div>
                 </div>
+                {fPost.endorser && (
+                  <span className={classes.instructorEndorsedText}>
+                    <li>{`An instructor thinks this is a good ${fPost.pType.toLowerCase()}`}</li>
+                  </span>
+                )}
+                {fPost.followUps?.filter((followUp) => !followUp.resolved)
+                  .length > 0 && (
+                  <span className={classes.unresolvedText}>
+                    <li>{`${
+                      fPost.followUps?.filter((followUp) => !followUp.resolved)
+                        .length
+                    } Unresolved followup${
+                      fPost.followUps?.filter((followUp) => !followUp.resolved)
+                        .length > 1
+                        ? "s"
+                        : ""
+                    }`}</li>
+                  </span>
+                )}
               </div>
-              {fPost.endorser && (
-                <span className={classes.instructorEndorsedText}>
-                  <li>{`An instructor thinks this is a good ${fPost.pType.toLowerCase()}`}</li>
-                </span>
-              )}
-              {fPost.followUps?.filter((followUp) => !followUp.resolved)
-                .length > 0 && (
-                <span className={classes.unresolvedText}>
-                  <li>{`${
-                    fPost.followUps?.filter((followUp) => !followUp.resolved)
-                      .length
-                  } Unresolved followup${
-                    fPost.followUps?.filter((followUp) => !followUp.resolved)
-                      .length > 1
-                      ? "s"
-                      : ""
-                  }`}</li>
-                </span>
-              )}
             </div>
-          </div>
-        );
-      });
-    return posts;
-  };
+          );
+        });
+      return posts;
+    },
+    [filteredPosts, post]
+  );
 
   return (
     <div className={classes.container}>
