@@ -98,6 +98,7 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
 
   const [weeks, setWeeks] = useState<number[]>([]);
   console.log("bye", weeks);
+  console.log("is it reversed?", filteredPosts);
 
   const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
     "0": true,
@@ -108,7 +109,7 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   });
   useEffect(() => {
     const acc: number[] = [];
-    [...filteredPosts].reverse().forEach((post) => {
+    filteredPosts.reverse().forEach((post) => {
       setMouseOverPostField(post.title, "init", "on");
       const weeksAgo = Math.floor(
         (getDaysAgo(post.date) - (new Date().getDay() + 8)) / 7
