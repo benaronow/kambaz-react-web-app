@@ -69,8 +69,11 @@ export const Modules = () => {
       <br />
       <br />
       <ul id="wd-modules" className="list-group rounded-0">
-        {modules.map((module: any) => (
-          <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
+        {modules.map((module: any, idx: number) => (
+          <li
+            className="wd-module list-group-item p-0 mb-5 fs-5 border-gray"
+            key={idx}
+          >
             <div className="wd-title p-3 ps-2 bg-secondary">
               <BsGripVertical className="me-2 fs-3" />
               {!module.editing && module.name}
@@ -99,8 +102,8 @@ export const Modules = () => {
             </div>
             {module.lessons && (
               <ul className="wd-lessons list-group rounded-0">
-                {module.lessons.map((lesson: any) => (
-                  <li className="wd-lesson list-group-item p-3 ps-1">
+                {module.lessons.map((lesson: any, idx: number) => (
+                  <li className="wd-lesson list-group-item p-3 ps-1" key={idx}>
                     <BsGripVertical className="me-2 fs-3" /> {lesson.name}{" "}
                     <LessonControlButtons
                       isModule={false}

@@ -6,7 +6,7 @@ export const CourseNavigation = () => {
   const links = [
     "Home",
     "Modules",
-    "Piazza",
+    "Pazza",
     "Zoom",
     "Assignments",
     "Quizzes",
@@ -22,8 +22,9 @@ export const CourseNavigation = () => {
 
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      {links.map((link) => (
+      {links.map((link, idx) => (
         <Link
+          key={idx}
           to={`/Kambaz/Courses/${cid}/${link}`}
           id={`wd-course-${link.toLowerCase()}-link`}
           className={`list-group-item border border-0 ${getColor(link)}`}
