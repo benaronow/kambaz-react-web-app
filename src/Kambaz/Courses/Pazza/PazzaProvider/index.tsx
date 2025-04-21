@@ -97,6 +97,8 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   }, [allPosts, filter]);
 
   const [weeks, setWeeks] = useState<number[]>([]);
+  console.log("bye", weeks);
+
   const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
     "0": true,
     "1": true,
@@ -121,7 +123,10 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
         });
       }
     });
-    console.log(acc.sort((a, b) => a - b));
+    console.log(
+      "hi",
+      acc.sort((a, b) => a - b)
+    );
     setWeeks(acc.sort((a, b) => a - b));
   }, [filteredPosts]);
 
