@@ -846,7 +846,7 @@ export const Sidebar = ({
               !post.pinned
           )
         )}
-      {weeks.reverse().map((week, idx) => (
+      {weeks.map((week, idx) => (
         <div key={idx}>
           {filteredPosts.filter(
             (post) =>

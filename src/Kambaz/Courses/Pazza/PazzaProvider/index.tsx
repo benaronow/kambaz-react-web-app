@@ -97,8 +97,6 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
   }, [allPosts, filter]);
 
   const [weeks, setWeeks] = useState<number[]>([]);
-  console.log("bye", weeks);
-  console.log("is it reversed?", filteredPosts);
 
   const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
     "0": true,
@@ -124,10 +122,6 @@ export const PazzaProvider = ({ value, children }: PazzaProviderProps) => {
         });
       }
     });
-    console.log(
-      "hi",
-      acc.sort((a, b) => a - b)
-    );
     setWeeks(acc.sort((a, b) => a - b));
   }, [filteredPosts]);
 
