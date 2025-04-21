@@ -122,9 +122,9 @@ export const QuestionAnswerPage = () => {
                   <StudentAnswerBox />
                 )}
               {post?.pType === "QUESTION" &&
-                (post.instructorAnswer ||
-                  currentUser?.role === "FACULTY" ||
-                  currentUser?.role === "TA") && <InstructorAnswerBox />}
+                (post.instructorAnswer || currentUser?.role !== "STUDENT") && (
+                  <InstructorAnswerBox />
+                )}
               <FollowUpBox />
             </div>
           </div>

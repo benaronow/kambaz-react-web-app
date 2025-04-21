@@ -104,7 +104,10 @@ export const AskQuestionBox = () => {
     if (postEdits) {
       const errors = validatePost(postEdits);
       if (errors.length === 0) {
-        const newPost = await createPost(postEdits);
+        const newPost = await createPost({
+          ...postEdits,
+          views: [currentUser._id],
+        });
         toggleAsking();
         setPost(newPost);
         const newAllPosts = await findAllPosts();
