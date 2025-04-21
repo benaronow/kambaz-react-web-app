@@ -444,8 +444,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({
-  mouseOverPost,
-  setMouseOverPostField,
+  // mouseOverPost,
+  // setMouseOverPostField,
   setAllMouseOverPost,
   showActions,
   flipShowActions,
@@ -570,12 +570,12 @@ export const Sidebar = ({
                   ? classes.unansweredPost
                   : ""
               }`}
-              onMouseEnter={() => {
-                setMouseOverPostField(fPost.title, "show", "on");
-              }}
-              onMouseLeave={() => {
-                setMouseOverPostField(fPost.title, "show", "off");
-              }}
+              // onMouseEnter={() => {
+              //   setMouseOverPostField(fPost.title, "show", "on");
+              // }}
+              // onMouseLeave={() => {
+              //   setMouseOverPostField(fPost.title, "show", "off");
+              // }}
               onClick={() => {
                 changePost(fPost);
                 viewPost(fPost);
@@ -583,7 +583,7 @@ export const Sidebar = ({
               }}
             >
               <div className={classes.postLeft}>
-                <div
+                {/* <div
                   onMouseEnter={() => {
                     setMouseOverPostField(fPost.title, "over", "on");
                   }}
@@ -609,7 +609,7 @@ export const Sidebar = ({
                       </div>
                     )
                   )}
-                </div>
+                </div> */}
                 {!fPost.views.find((view) => view === currentUser._id) && (
                   <div className={classes.unviewedCircle} />
                 )}
